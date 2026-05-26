@@ -1,0 +1,32 @@
+[project]
+name = "sudoku-solver"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11.5"
+dependencies = [
+    "kaggle>=2.1.2",
+    "rich>=14.1.0,<15.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "python-semantic-release>=9.0.0,<10.0.0",
+    "ruff>=0.12.5,<0.13.0",
+]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+branch = "main"
+tag_format = "v{version}"
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = ["feat", "fix", "perf", "refactor", "chore", "docs", "style", "test"]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
+
+[tool.ruff]
+src = ["puzzles", "."]
+line-length = 88
+lint.select = ["E", "F", "I", "Q", "N", "D1"]
+fix = true
