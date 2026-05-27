@@ -3,21 +3,16 @@
 import random
 from pathlib import Path
 
-from puzzle import Puzzle
-from puzzles import PuzzleData
-from puzzles.chaossudoku_3 import cs_3
-from puzzles.chaossudoku_4 import cs_4
-from puzzles.loader import load_from_csv
 from rich import print as rprint
 from rich.prompt import Confirm, Prompt
 
-CSV_PATH = (
-    Path(__file__).parent.parent.parent
-    / "src"
-    / "sudoku_solver"
-    / "puzzles"
-    / "sudoku.csv"
-)
+from sudoku_solver.puzzle import Puzzle
+from sudoku_solver.puzzles import PuzzleData
+from sudoku_solver.puzzles.chaossudoku_3 import cs_3
+from sudoku_solver.puzzles.chaossudoku_4 import cs_4
+from sudoku_solver.puzzles.loader import load_from_csv
+
+CSV_PATH = Path(__file__).parent / "puzzles" / "sudoku.csv"
 KAGGLE_SAMPLE_SIZE = 1000
 
 
