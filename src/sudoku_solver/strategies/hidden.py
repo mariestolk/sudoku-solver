@@ -44,7 +44,10 @@ def reduce_hidden_pair(groups: list[list[Cell]]) -> None:
         two_cell_candidates = [
             (cand, cells) for cand, cells in candidate_map.items() if len(cells) == 2
         ]
-        for (cand_a, cells_a), (cand_b, cells_b) in combinations(two_cell_candidates, 2):
+        for (cand_a, cells_a), (cand_b, cells_b) in combinations(
+            two_cell_candidates,
+            2,
+        ):
             if {id(c) for c in cells_a} == {id(c) for c in cells_b}:
                 pair_values = {cand_a, cand_b}
                 for cell in cells_a:
