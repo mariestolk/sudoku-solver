@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import csv
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -82,7 +82,7 @@ def evaluate_batch(
     return result
 
 
-def _grid_to_str(grid: list[list[int | None]]) -> str:
+def _grid_to_str(grid: Sequence[Sequence[int | None]]) -> str:
     return "".join(str(v) if v is not None else "0" for row in grid for v in row)
 
 
