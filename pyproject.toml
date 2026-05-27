@@ -15,6 +15,12 @@ dev = [
     "ruff>=0.12.5,<0.13.0",
 ]
 
+[tool.uv]
+package = true
+
+[project.scripts]
+sudoku-solver = "sudoku_solver.cli:main"
+
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]
 branch = "main"

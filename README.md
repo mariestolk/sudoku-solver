@@ -13,8 +13,7 @@ uv sync
 ## Running
 
 ```bash
-cd src/sudoku_solver
-uv run python main.py
+uv run sudoku-solver
 ```
 
 On startup, you choose a puzzle:
@@ -37,10 +36,8 @@ Cell (4, 2) → 7  [hidden single]
 To enable option 3, download the [9 Million Sudoku Puzzles](https://www.kaggle.com/datasets/rohanrao/sudoku) dataset from the project root:
 
 ```bash
-kaggle datasets download rohanrao/sudoku --unzip --path src/sudoku_solver/puzzles
+uv run kaggle datasets download rohanrao/sudoku --unzip --path src/sudoku_solver/puzzles
 ```
-
-This requires a Kaggle account. Place your `kaggle.json` credentials at `%USERPROFILE%\.kaggle\kaggle.json` (Windows) or `~/.kaggle/kaggle.json` (Linux/macOS).
 
 ## How the solver works
 

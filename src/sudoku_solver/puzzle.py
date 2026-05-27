@@ -6,8 +6,9 @@ Sudoku puzzles through candidate reduction and constraint propagation.
 
 import random
 
-from cell import create_cell
 from rich import print as rprint
+
+from sudoku_solver.cell import create_cell
 
 STANDARD_GROUP_MAP = [[(r // 3) * 3 + (c // 3) for c in range(9)] for r in range(9)]
 
