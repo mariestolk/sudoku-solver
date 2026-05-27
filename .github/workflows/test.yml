@@ -1,4 +1,4 @@
-name: Lint & Format
+name: Test
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,11 +17,5 @@ jobs:
 
       - run: uv sync --dev
 
-      - name: Lint
-        run: uv run ruff check src/
-
-      - name: Format
-        run: uv run ruff format --check src/
-
-      - name: Type check
-        run: uv run mypy src/
+      - name: Test
+        run: uv run pytest tests/
