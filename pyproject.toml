@@ -11,6 +11,8 @@ dependencies = [
 
 [project.scripts]
 sudoku-solver = "sudoku_solver.cli:main"
+sudoku-evaluate = "sudoku_solver.evaluator:main"
+
 
 
 
@@ -35,6 +37,9 @@ allowed_tags = ["feat", "fix", "perf", "refactor", "chore", "docs", "style", "te
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf"]
 
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [tool.mypy]
 python_version = "3.11"

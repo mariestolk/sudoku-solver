@@ -15,14 +15,15 @@ def make_cells(candidate_sets: list[list[int]], group: int = 0) -> list[Cell]:
 
 
 def test_hidden_single_narrows_cell_in_row() -> None:
-    """Ensure a cell is narrowed to one candidate when that candidate is unique in a row."""
+    """Ensure a cell is narrowed to one candidate when candidate is unique in a row."""
     cells = make_cells([[1, 2, 3], [4, 5, 9], [6, 7, 8]])
     reduce_hidden_single([cells], [], [])
     assert cells[1].candidates == {9}
 
 
 def test_hidden_single_narrows_cell_in_column() -> None:
-    """Ensure a cell is narrowed to one candidate when that candidate is unique in a column."""
+    """Ensure a cell is narrowed to one candidate when that
+    candidate is unique in a column."""
     cell_a = create_cell(0, 0, 0)
     cell_a.set_candidates([1, 2, 3])
     cell_b = create_cell(1, 0, 0)
@@ -35,7 +36,8 @@ def test_hidden_single_narrows_cell_in_column() -> None:
 
 
 def test_hidden_single_narrows_cell_in_group() -> None:
-    """Ensure a cell is narrowed to one candidate when that candidate is unique in a group."""
+    """Ensure a cell is narrowed to one candidate when that
+    candidate is unique in a group."""
     cells = make_cells([[1, 2, 3], [4, 5, 9], [6, 7, 8]])
     reduce_hidden_single([], [], [cells])
     assert cells[1].candidates == {9}

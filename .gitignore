@@ -9,8 +9,9 @@ wheels/
 # Virtual environments
 .venv
 
-# Kaggle dataset (too large to commit)
+# CSVs
 sudoku.csv
+stuck.csv
 
 # Redundant md files
 *DE.md

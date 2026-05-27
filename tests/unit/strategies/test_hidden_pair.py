@@ -31,7 +31,7 @@ def test_non_pair_cell_is_not_modified() -> None:
 
 
 def test_no_change_when_no_hidden_pair_exists() -> None:
-    """Ensure nothing is removed when no two values are confined to the same two cells."""
+    """Ensure nothing is removed when no hidden pair exists."""
     group = make_group([[1, 2, 3], [2, 3, 4], [3, 4, 5]])
     before = [set(cell.candidates) for cell in group]
     reduce_hidden_pair([group])
