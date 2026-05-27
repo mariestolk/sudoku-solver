@@ -11,6 +11,7 @@ from sudoku_solver.puzzles import PuzzleData
 from sudoku_solver.puzzles.chaossudoku_3 import cs_3
 from sudoku_solver.puzzles.chaossudoku_4 import cs_4
 from sudoku_solver.puzzles.loader import load_from_csv
+from sudoku_solver.renderer import print_puzzle, print_step
 
 CSV_PATH = Path(__file__).parent / "puzzles" / "sudoku.csv"
 KAGGLE_SAMPLE_SIZE = 1000
@@ -50,20 +51,27 @@ def select_puzzle() -> PuzzleData:
 def solve_interactively(puzzle_data: PuzzleData) -> None:
     """Run the step-by-step solving loop for the given puzzle."""
     puzzle = Puzzle(puzzle_data.values, puzzle_data.groups)
-    puzzle.print_puzzle()
+    print_puzzle(puzzle.rows)
 
     i = 0
-    while not puzzle.is_solved():
+    while not puzzle.is_solved:
         if not Confirm.ask(f"\n[bold]Step {i + 1}[/bold] — continue?"):
             break
 
-        puzzle.solve_step()
+        result = puzzle.solve_step()
+        if result is not None:
+            print_step(result)
         rprint()
-        puzzle.print_puzzle()
+        print_puzzle(puzzle.rows)
         i += 1
 
+    if puzzle.is_solved:
+        rprint()
+        rprint("[magenta]Puzzle is solved![/]")
+        rprint()
 
-def main():
+
+def main() -> None:
     """Run the interactive step-by-step sudoku solver."""
     puzzle_data = select_puzzle()
     rprint()

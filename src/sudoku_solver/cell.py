@@ -27,6 +27,10 @@ class Cell:
         self.candidates.clear()
         self.deciding_rule = None
 
+    def set_deciding_rule(self, rule: str) -> None:
+        """Record which reduction rule narrowed this cell to one candidate."""
+        self.deciding_rule = rule
+
     def set_candidates(self, candidates):
         """Set the candidates for the cell."""
         self.candidates = set(candidates)
