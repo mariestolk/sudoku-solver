@@ -1,10 +1,12 @@
-"""Display functions for rendering sudoku puzzles."""
+"""Pure formatting functions for sudoku puzzle display.
+
+Each function returns a Rich markup string. Callers are responsible for
+printing via rprint.
+"""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
-
-from rich import print as rprint
 
 from sudoku_solver.cell import Cell
 
@@ -24,12 +26,14 @@ color_map: dict[int, str] = {
 }
 
 
-def print_puzzle(rows: list[list[Cell]]) -> None:
-    """Print the Sudoku puzzle row by row, coloring cells by group."""
+def format_puzzle(rows: list[list[Cell]]) -> str:
+    """Return a Rich markup string of the full puzzle grid."""
     grid: list[list[Cell | None]] = [[None for _ in range(9)] for _ in range(9)]
     for puzzle_row in rows:
         for cell in puzzle_row:
             grid[cell.row][cell.column] = cell
+
+    lines = []
     for row in grid:
         row_output = ""
         for maybe_cell in row:
@@ -38,48 +42,47 @@ def print_puzzle(rows: list[list[Cell]]) -> None:
                 row_output += f"[{color}]{maybe_cell.value}[/] "
             elif maybe_cell is not None:
                 row_output += f"[{color_map[maybe_cell.group]}].[/] "
-        rprint(row_output)
+        lines.append(row_output)
+    return "\n".join(lines)
 
 
-def print_candidate(rows: list[list[Cell]], row: int, column: int) -> None:
-    """Print the candidates of a specific cell."""
+def format_candidate(rows: list[list[Cell]], row: int, column: int) -> str:
+    """Return a Rich markup string of the candidates for a specific cell."""
     cell = rows[row][column]
     if cell.candidates:
-        rprint(
+        return (
             f"[{color_map[cell.group]}]Candidates for cell ({row}, {column}): "
             f"{sorted(cell.candidates)}[/]"
         )
-    else:
-        rprint(f"[{color_map[cell.group]}]No candidates for cell ({row}, {column})[/]")
+    return f"[{color_map[cell.group]}]No candidates for cell ({row}, {column})[/]"
 
 
-def print_candidate_group(groups: list[list[Cell]], group: int) -> None:
-    """Print the candidates for all cells in a specific group."""
-    rprint(f"[{color_map[group]}]Candidates for group {group}:[/]")
+def format_candidate_group(groups: list[list[Cell]], group: int) -> str:
+    """Return a Rich markup string of the candidates for all cells in a group."""
+    lines = [f"[{color_map[group]}]Candidates for group {group}:[/]"]
     for cell in groups[group]:
         if cell.candidates:
-            rprint(f"Cell ({cell.row}, {cell.column}): {sorted(cell.candidates)}")
+            lines.append(f"Cell ({cell.row}, {cell.column}): {sorted(cell.candidates)}")
         else:
-            rprint(f"Cell ({cell.row}, {cell.column}): No candidates")
+            lines.append(f"Cell ({cell.row}, {cell.column}): No candidates")
+    return "\n".join(lines)
 
 
-def print_step(result: SolveResult) -> None:
-    """Print the outcome of a single solve step."""
-    rprint(
+def format_step(result: SolveResult) -> str:
+    """Return a Rich markup string describing a single solve step."""
+    return (
         f"[{color_map[result.group]}]Cell ({result.row}, {result.column})"
         f" → {result.value}[/]  \\[{result.rule}]"
     )
 
 
-def print_candidates(rows: list[list[Cell]]) -> None:
-    """Print the candidates for every cell in the grid."""
+def format_candidates(rows: list[list[Cell]]) -> str:
+    """Return a Rich markup string of candidates for every cell in the grid."""
+    lines = []
     for row in rows:
         for cell in row:
             if cell.candidates:
-                rprint(
-                    f"[{color_map[cell.group]}]{sorted(cell.candidates)}[/]", end=" "
-                )
-                rprint()
+                lines.append(f"[{color_map[cell.group]}]{sorted(cell.candidates)}[/]")
             else:
-                rprint("[grey].[/]", end=" ")
-                rprint()
+                lines.append("[grey].[/]")
+    return "\n".join(lines)
