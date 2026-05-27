@@ -10,6 +10,10 @@ Requires Python 3.11.5 and [uv](https://docs.astral.sh/uv/).
 uv sync
 ```
 
+## Overview
+
+![High-level solver flow](horizontal-flow.png)
+
 ## Interactive solver
 
 Solve a puzzle step by step in the terminal:
@@ -66,6 +70,17 @@ The evaluator and the interactive solver's random-puzzle option both require the
 uv run kaggle datasets download rohanrao/sudoku --unzip --path src/sudoku_solver/puzzles
 ```
 
+## Development
+
+```bash
+# Lint and auto-fix
+uv run ruff check --fix src/
+uv run ruff format src/
+
+# Type-check
+uv run mypy src/
+```
+
 ## Tests
 
 ```bash
@@ -79,6 +94,8 @@ The test suite covers:
 - Integration tests for the two built-in chaos puzzles and a 20-puzzle sample from the Kaggle dataset (`tests/test_puzzles.py`)
 
 ## How the solver works
+
+![Solver flow diagram](vertical-flow.png)
 
 Each empty cell starts with candidates `{1–9}`. After every value is placed, `reduce_candidates()` runs a pipeline of constraint-propagation rules in order:
 
