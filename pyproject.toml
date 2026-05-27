@@ -11,6 +11,8 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "mypy>=2.1.0",
+    "pytest>=9.0.3",
     "python-semantic-release>=9.0.0,<10.0.0",
     "ruff>=0.12.5,<0.13.0",
 ]
@@ -30,6 +32,11 @@ tag_format = "v{version}"
 allowed_tags = ["feat", "fix", "perf", "refactor", "chore", "docs", "style", "test"]
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
 
 [tool.ruff]
 src = ["puzzles", "."]

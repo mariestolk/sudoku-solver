@@ -63,7 +63,7 @@ def solve_interactively(puzzle_data: PuzzleData) -> None:
         i += 1
 
 
-def main():
+def main() -> None:
     """Run the interactive step-by-step sudoku solver."""
     puzzle_data = select_puzzle()
     rprint()

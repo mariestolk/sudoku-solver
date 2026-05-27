@@ -25,7 +25,7 @@ class PuzzleData(NamedTuple):
             if {self.solution[r][c] for r in range(9)} != expected:
                 return False
 
-        group_values: dict[int, set] = {}
+        group_values: dict[int, set[int]] = {}
         for r in range(9):
             for c in range(9):
                 g = self.groups[r][c]
