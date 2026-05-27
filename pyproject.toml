@@ -1,6 +1,6 @@
 [project]
 name = "sudoku-solver"
-version = "0.1.0"
+version = "0.2.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11.5"
@@ -8,6 +8,10 @@ dependencies = [
     "kaggle>=2.1.2",
     "rich>=14.1.0,<15.0.0",
 ]
+
+[project.scripts]
+sudoku-solver = "sudoku_solver.cli:main"
+
 
 [dependency-groups]
 dev = [
@@ -20,9 +24,6 @@ dev = [
 [tool.uv]
 package = true
 
-[project.scripts]
-sudoku-solver = "sudoku_solver.cli:main"
-
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]
 branch = "main"
@@ -32,6 +33,7 @@ tag_format = "v{version}"
 allowed_tags = ["feat", "fix", "perf", "refactor", "chore", "docs", "style", "test"]
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf"]
+
 
 [tool.mypy]
 python_version = "3.11"
