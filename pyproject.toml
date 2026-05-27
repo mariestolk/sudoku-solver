@@ -11,6 +11,7 @@ dependencies = [
 
 [project.scripts]
 sudoku-solver = "sudoku_solver.cli:main"
+sudoku-evaluate = "sudoku_solver.evaluator:main"
 
 
 [dependency-groups]

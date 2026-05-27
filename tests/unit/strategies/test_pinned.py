@@ -1,6 +1,6 @@
 """Tests for the pinned candidate strategy."""
 
-from sudoku_solver.cell import Cell, create_cell
+from sudoku_solver.cell import create_cell
 from sudoku_solver.strategies.pinned import reduce_pinned_candidate
 
 
