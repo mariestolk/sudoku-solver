@@ -31,7 +31,7 @@ class Cell:
         """Record which reduction rule narrowed this cell to one candidate."""
         self.deciding_rule = rule
 
-    def set_candidates(self, candidates):
+    def set_candidates(self, candidates: list[int]) -> None:
         """Set the candidates for the cell."""
         self.candidates = set(candidates)
 
