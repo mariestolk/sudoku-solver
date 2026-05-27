@@ -74,6 +74,17 @@ class Puzzle:
         """Return True if every cell has a value."""
         return all(cell.value is not None for row in self.rows for cell in row)
 
+    @property
+    def is_valid_solution(self) -> bool:
+        """Return True if every row, column, and group contains each digit
+        1–9 exactly once.
+        """
+        expected = set(range(1, 10))
+        return all(
+            {cell.value for cell in unit} == expected
+            for unit in (*self.rows, *self.columns, *self.groups)
+        )
+
     def is_valid_assignment(self, row: int, column: int, value: int) -> bool:
         """Return True if placing value at (row, column) violates no constraints."""
         target_cell = self.rows[row][column]
