@@ -5,7 +5,8 @@ from sudoku_solver.strategies.pinned import reduce_pinned_candidate
 
 
 def test_pinned_to_row_removes_candidate_outside_group() -> None:
-    """Ensure a row-pinned candidate is removed from cells in that row outside the group."""
+    """Ensure a row-pinned candidate is removed from cells in that row
+    outside the group."""
     # Group 0: candidate 5 appears only in row 0 (cells (0,0) and (0,1))
     cell_00 = create_cell(0, 0, 0)
     cell_01 = create_cell(0, 1, 0)
@@ -39,7 +40,7 @@ def test_pinned_to_row_group_cells_keep_candidate() -> None:
 
 
 def test_no_removal_when_candidate_spans_multiple_rows() -> None:
-    """Ensure no candidate is removed when it appears in more than one row of the group."""
+    """Ensure no candidate is removed when it appears in more than one row of group."""
     cell_00 = create_cell(0, 0, 0)  # row 0, has 5
     cell_10 = create_cell(1, 0, 0)  # row 1, has 5
 
@@ -55,7 +56,8 @@ def test_no_removal_when_candidate_spans_multiple_rows() -> None:
 
 
 def test_pinned_to_column_removes_candidate_outside_group() -> None:
-    """Ensure a column-pinned candidate is removed from cells in that column outside the group."""
+    """Ensure a column-pinned candidate is removed from cells in that column
+    outside the group."""
     # Group 0: candidate 7 appears only in column 0 (cells (0,0) and (1,0))
     cell_00 = create_cell(0, 0, 0)
     cell_10 = create_cell(1, 0, 0)

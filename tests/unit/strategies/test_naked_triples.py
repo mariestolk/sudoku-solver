@@ -40,7 +40,8 @@ def test_other_candidates_in_peer_left_intact() -> None:
 
 
 def test_no_removal_when_only_two_matching_cells() -> None:
-    """Ensure nothing is removed when fewer than three cells share the same candidates."""
+    """Ensure nothing is removed when fewer than three cells
+    share the same candidates."""
     group = make_group([[1, 2, 3], [1, 2, 3], [1, 2, 4]])
     before = [set(cell.candidates) for cell in group]
     reduce_naked_triples([group])

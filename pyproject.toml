@@ -36,6 +36,9 @@ minor_tags = ["feat"]
 patch_tags = ["fix", "perf"]
 
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
 [tool.mypy]
 python_version = "3.11"
 strict = true
