@@ -5,9 +5,7 @@ from collections.abc import Sequence
 from sudoku_solver.cell import Cell
 
 
-def _remove_from_line(
-    candidate: int, line: Sequence[Cell], group: list[Cell]
-) -> None:
+def _remove_from_line(candidate: int, line: Sequence[Cell], group: list[Cell]) -> None:
     """Remove a candidate from cells in a row or column that lie outside the group."""
     for cell in line:
         if cell not in group and candidate in cell.candidates:
