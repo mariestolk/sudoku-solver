@@ -22,3 +22,6 @@ jobs:
 
       - name: Format
         run: uv run ruff format --check src/
+
+      - name: Type check
+        run: uv run mypy src/
