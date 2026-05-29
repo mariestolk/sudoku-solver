@@ -1,6 +1,6 @@
 """Chaos Sudoku puzzle #3."""
 
-from sudoku_solver.puzzles import PuzzleData
+from sudoku_solver.puzzle import PuzzleData
 
 value_map = [
     [0, 0, 7, 0, 0, 0, 0, 2, 0],
