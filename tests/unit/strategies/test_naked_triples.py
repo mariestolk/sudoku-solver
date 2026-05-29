@@ -49,6 +49,28 @@ def test_no_removal_when_only_two_matching_cells() -> None:
         assert cell.candidates == original
 
 
+def test_mixed_naked_triple_removes_candidates_from_peers() -> None:
+    """Ensure a mixed naked triple (e.g. {1,2},{2,3},{1,3}) is detected."""
+    group = make_group([[1, 2], [2, 3], [1, 3], [1, 2, 3, 4]])
+    reduce_naked_triples([group])
+    assert group[3].candidates == {4}
+
+
+def test_mixed_naked_triple_with_full_cell_removes_candidates() -> None:
+    """Ensure a triple where one cell has all three candidates is detected."""
+    group = make_group([[1, 2], [1, 2, 3], [2, 3], [1, 2, 3, 4]])
+    reduce_naked_triples([group])
+    assert group[3].candidates == {4}
+
+
+def test_non_triple_union_leaves_candidates_intact() -> None:
+    """Ensure three cells whose union covers four values are not treated as a triple."""
+    group = make_group([[1, 2], [2, 3], [1, 4], [1, 2, 3, 4]])
+    before = set(group[3].candidates)
+    reduce_naked_triples([group])
+    assert group[3].candidates == before
+
+
 def test_does_not_affect_other_groups() -> None:
     """Ensure naked triple elimination is isolated to the affected group."""
     group0 = make_group([[1, 2, 3], [1, 2, 3], [1, 2, 3], [1, 2, 3, 4]])
