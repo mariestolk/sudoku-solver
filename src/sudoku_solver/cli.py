@@ -6,11 +6,10 @@ from pathlib import Path
 from rich import print as rprint
 from rich.prompt import Confirm, Prompt
 
-from sudoku_solver.puzzle import Puzzle
-from sudoku_solver.puzzles import PuzzleData
+from sudoku_solver.loader import load_from_csv
+from sudoku_solver.puzzle import Puzzle, PuzzleData
 from sudoku_solver.puzzles.chaossudoku_3 import cs_3
 from sudoku_solver.puzzles.chaossudoku_4 import cs_4
-from sudoku_solver.puzzles.loader import load_from_csv
 from sudoku_solver.renderer import format_puzzle, format_step
 
 CSV_PATH = Path("data") / "sudoku.csv"

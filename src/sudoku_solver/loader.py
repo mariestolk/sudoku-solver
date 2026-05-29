@@ -4,9 +4,7 @@ import csv
 from collections.abc import Iterator
 from pathlib import Path
 
-from sudoku_solver.puzzles import PuzzleData
-
-STANDARD_GROUP_MAP = [[(r // 3) * 3 + (c // 3) for c in range(9)] for r in range(9)]
+from sudoku_solver.puzzle import STANDARD_GROUP_MAP, PuzzleData
 
 
 def _parse_grid(s: str) -> list[list[int]]:

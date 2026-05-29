@@ -6,11 +6,10 @@ from itertools import islice
 from pathlib import Path
 
 import pytest
-from sudoku_solver.puzzle import Puzzle
-from sudoku_solver.puzzles import PuzzleData
+from sudoku_solver.loader import load_from_csv
+from sudoku_solver.puzzle import Puzzle, PuzzleData
 from sudoku_solver.puzzles.chaossudoku_3 import cs_3
 from sudoku_solver.puzzles.chaossudoku_4 import cs_4
-from sudoku_solver.puzzles.loader import load_from_csv
 
 _CSV_PATH = Path(__file__).parent.parent / "data" / "sudoku.csv"
 _CSV_SAMPLE = 20

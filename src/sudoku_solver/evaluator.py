@@ -13,9 +13,8 @@ from rich.console import Console
 from rich.progress import BarColumn, MofNCompleteColumn, Progress, TimeRemainingColumn
 from rich.table import Table
 
-from sudoku_solver.puzzle import Puzzle
-from sudoku_solver.puzzles import PuzzleData
-from sudoku_solver.puzzles.loader import load_from_csv
+from sudoku_solver.loader import load_from_csv
+from sudoku_solver.puzzle import Puzzle, PuzzleData
 
 DEFAULT_BATCH_SIZE = 1000
 
