@@ -16,6 +16,7 @@ sudoku-evaluate = "sudoku_solver.evaluator:main"
 [project.optional-dependencies]
 build = ["uv~=0.7.12"]
 
+
 [dependency-groups]
 dev = [
     "mypy>=2.1.0",
