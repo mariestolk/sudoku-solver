@@ -33,7 +33,7 @@ branch = "main"
 tag_format = "v{version}"
 commit_message = "chore(release): {version} [skip ci]"
 build_command = """
-    uv lock --upgrade-package "$PACKAGE_NAME"
+    uv lock --upgrade-package sudoku-solver
     git add uv.lock
     uv build
 """
