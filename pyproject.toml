@@ -13,7 +13,8 @@ dependencies = [
 sudoku-solver = "sudoku_solver.cli:main"
 sudoku-evaluate = "sudoku_solver.evaluator:main"
 
-
+[project.optional-dependencies]
+build = ["uv~=0.7.12"]
 
 
 [dependency-groups]
@@ -33,6 +34,7 @@ branch = "main"
 tag_format = "v{version}"
 commit_message = "chore(release): {version} [skip ci]"
 build_command = """
+    python -m pip install -e '.[build]'
     uv lock --upgrade-package sudoku-solver
     git add uv.lock
     uv build
