@@ -13,7 +13,7 @@ from sudoku_solver.puzzles.chaossudoku_4 import cs_4
 from sudoku_solver.puzzles.loader import load_from_csv
 from sudoku_solver.renderer import format_puzzle, format_step
 
-CSV_PATH = Path(__file__).parent / "puzzles" / "sudoku.csv"
+CSV_PATH = Path("data") / "sudoku.csv"
 KAGGLE_SAMPLE_SIZE = 1000
 
 
@@ -34,8 +34,7 @@ def select_puzzle() -> PuzzleData:
     if not CSV_PATH.exists():
         rprint(f"\n[red]Dataset not found at {CSV_PATH}[/]")
         rprint("Download it with:")
-        rprint("  uv run kaggle datasets download rohanrao/sudoku ")
-        rprint("  --unzip --path puzzles")
+        rprint("  uv run sudoku-download")
         raise SystemExit(1)
 
     rprint(f"\n[dim]Sampling {KAGGLE_SAMPLE_SIZE} puzzles from dataset...[/]")
