@@ -7,15 +7,11 @@ from sudoku_solver.cell import Cell
 
 def reduce_hidden_single(
     rows: list[list[Cell]],
-    columns: list[tuple[Cell, ...]],
+    columns: list[list[Cell]],
     groups: list[list[Cell]],
 ) -> None:
     """Reduce candidates by finding single candidates in rows, columns, and groups."""
-    units: list[list[Cell]] = [
-        *rows,
-        *[list(col) for col in columns],
-        *groups,
-    ]
+    units: list[list[Cell]] = [*rows, *columns, *groups]
     for unit in units:
         candidate_map: dict[int, list[Cell]] = {}
         for cell in unit:

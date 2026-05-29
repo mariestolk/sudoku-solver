@@ -4,9 +4,9 @@ from sudoku_solver.cell import Cell, create_cell
 from sudoku_solver.strategies.elimination import reduce_columns
 
 
-def make_column(values: list[int | None], column_index: int = 0) -> tuple[Cell, ...]:
+def make_column(values: list[int | None], column_index: int = 0) -> list[Cell]:
     """Build a column of cells; None means unsolved (candidates 1–9)."""
-    return tuple(create_cell(row, column_index, 0, v) for row, v in enumerate(values))
+    return [create_cell(row, column_index, 0, v) for row, v in enumerate(values)]
 
 
 def test_solved_cell_value_removed_from_peers() -> None:
