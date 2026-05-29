@@ -42,8 +42,8 @@ Cell (4, 2) → 7  [hidden single]
 Run the solver against a batch of Kaggle puzzles and get statistics:
 
 ```bash
-uv run sudoku-evaluate src/sudoku_solver/puzzles/sudoku.csv
-uv run sudoku-evaluate src/sudoku_solver/puzzles/sudoku.csv --batch-size 5000
+uv run sudoku-evaluate data/sudoku.csv
+uv run sudoku-evaluate data/sudoku.csv --batch-size 5000
 ```
 
 Reports three things:
@@ -55,7 +55,7 @@ Reports three things:
 To save puzzles the solver could not finish, pass `--output`:
 
 ```bash
-uv run sudoku-evaluate src/sudoku_solver/puzzles/sudoku.csv --output stuck.csv
+uv run sudoku-evaluate data/sudoku.csv --output stuck.csv
 ```
 
 The output CSV contains three columns: `puzzle` (original), `partial` (state when stuck), and `solution` (when available).
@@ -64,10 +64,42 @@ Expected runtime is roughly **11ms per puzzle**.
 
 ## Kaggle dataset
 
-The evaluator and the interactive solver's random-puzzle option both require the [9 Million Sudoku Puzzles](https://www.kaggle.com/datasets/rohanrao/sudoku) dataset. Download it from the project root:
+The evaluator and the interactive solver's random-puzzle option both require the [9 Million Sudoku Puzzles](https://www.kaggle.com/datasets/rohanrao/sudoku) dataset.
+
+Set your Kaggle API token (from [kaggle.com/settings](https://www.kaggle.com/settings)) as an environment variable:
 
 ```bash
-uv run kaggle datasets download rohanrao/sudoku --unzip --path src/sudoku_solver/puzzles
+export KAGGLE_API_TOKEN=your_token_here
+```
+
+Then download the dataset:
+
+```bash
+uv run sudoku-download                             # saves to data/
+uv run sudoku-download --output-dir <path>         # custom location
+uv run sudoku-download --force                     # re-download if already present
+```
+
+## Docker
+
+Build the image:
+
+```bash
+docker build -t sudoku-solver .
+```
+
+Download the dataset once (requires `KAGGLE_API_TOKEN`):
+
+```bash
+uv run sudoku-download
+```
+
+Run the evaluator, mounting `data/` into the container:
+
+```bash
+docker run --rm -v "./data:/data" sudoku-solver
+docker run --rm -v "./data:/data" sudoku-solver /data/sudoku.csv --batch-size 500
+docker run --rm -v "./data:/data" sudoku-solver /data/sudoku.csv --output /data/stuck.csv
 ```
 
 ## Development
