@@ -1,6 +1,21 @@
 # CHANGELOG
 
 
+## v0.4.1 (2026-05-29)
+
+### Bug Fixes
+
+- Correct naked triples to detect mixed-candidate patterns
+  ([#17](https://github.com/mariestolk/sudoku-solver/pull/17),
+  [`b7eb63f`](https://github.com/mariestolk/sudoku-solver/commit/b7eb63f604f67ecdb5db61058159deb8ea853523))
+
+### Refactoring
+
+- Move PuzzleData to puzzle.py and loader to top-level package
+  ([#16](https://github.com/mariestolk/sudoku-solver/pull/16),
+  [`35a224f`](https://github.com/mariestolk/sudoku-solver/commit/35a224ffa504fb60f82fe1b69199ba3f0e84a72e))
+
+
 ## v0.4.0 (2026-05-29)
 
 ### Bug Fixes
