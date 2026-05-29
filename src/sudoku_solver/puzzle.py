@@ -80,8 +80,9 @@ class Puzzle:
         grid = self._initialize_cells(value_map, group_map)
 
         self.rows: list[list[Cell]] = grid
-        self.columns: list[tuple[Cell, ...]] = list(zip(*grid))
+        self.columns: list[list[Cell]] = [list(col) for col in zip(*grid)]
         self.groups: list[list[Cell]] = self._build_groups()
+        self._naked_singles: set[Cell] = set()
 
         self.reduce_candidates()
 
@@ -146,6 +147,7 @@ class Puzzle:
         """Set the value of a cell and propagate constraints."""
         cell = self.rows[row][column]
         if cell.value is None and value in cell.candidates:
+            self._naked_singles.discard(cell)
             cell.set_value(value)
             self.reduce_candidates()
 
@@ -167,32 +169,27 @@ class Puzzle:
                 lambda: reduce_pinned_candidate(self.groups, self.rows, self.columns),
             ),
         ]
-        for rule_name, rule_fn in rules:
-            pre_multi: set[Cell] = {
-                cell
-                for row in self.rows
-                for cell in row
-                if cell.value is None and len(cell.candidates) != 1
-            }
-            rule_fn()
-            for row in self.rows:
-                for cell in row:
-                    if cell in pre_multi and len(cell.candidates) == 1:
-                        cell.set_deciding_rule(rule_name)
-
-    def solve_step(self) -> SolveResult | None:
-        """Pick a random single-candidate cell, assign it, and return the result."""
-        solvable_cells = [
+        multi: set[Cell] = {
             cell
             for row in self.rows
             for cell in row
-            if cell.value is None and len(cell.candidates) == 1
-        ]
+            if cell.value is None and len(cell.candidates) != 1
+        }
+        for rule_name, rule_fn in rules:
+            rule_fn()
+            resolved = {cell for cell in multi if len(cell.candidates) == 1}
+            for cell in resolved:
+                cell.set_deciding_rule(rule_name)
+            self._naked_singles |= resolved
+            multi -= resolved
 
-        if not solvable_cells:
+    def solve_step(self) -> SolveResult | None:
+        """Pick a random single-candidate cell, assign it, and return the result."""
+        if not self._naked_singles:
             return None
 
-        cell = random.choice(solvable_cells)
+        cell = random.choice(tuple(self._naked_singles))
+        self._naked_singles.discard(cell)
         value = next(iter(cell.candidates))
         result = SolveResult(
             row=cell.row,

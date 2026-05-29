@@ -18,15 +18,6 @@ from sudoku_solver.puzzle import Puzzle, PuzzleData
 
 DEFAULT_BATCH_SIZE = 1000
 
-RULE_TIERS: list[tuple[str, set[str]]] = [
-    ("elimination", {"row elimination", "column elimination", "group elimination"}),
-    ("+ hidden single", {"hidden single"}),
-    ("+ pinned candidate", {"pinned candidate"}),
-    ("+ naked pair", {"naked pair"}),
-    ("+ naked triple", {"naked triple"}),
-    ("+ hidden pair", {"hidden pair"}),
-]
-
 
 @dataclass
 class BatchResult:
@@ -35,7 +26,6 @@ class BatchResult:
     total: int = 0
     solved: int = 0
     rule_counts: Counter[str] = field(default_factory=Counter)
-    rules_per_solved: list[frozenset[str]] = field(default_factory=list)
     stuck: list[tuple[PuzzleData, list[list[int | None]]]] = field(default_factory=list)
 
 
@@ -74,7 +64,6 @@ def evaluate_batch(
             result.rule_counts += counts
             if solved:
                 result.solved += 1
-                result.rules_per_solved.append(frozenset(counts.keys()))
             else:
                 result.stuck.append((pd, partial))
             progress.advance(task)
@@ -145,23 +134,6 @@ def main() -> None:
             )
         console.print()
         console.print(usage_table)
-
-    if result.rules_per_solved:
-        suff_table = Table(
-            title="Rule sufficiency (solved puzzles)", header_style="bold"
-        )
-        suff_table.add_column("Rules available", style="cyan")
-        suff_table.add_column("Puzzles solved", justify="right")
-        suff_table.add_column("% of solved", justify="right")
-        cumulative: set[str] = set()
-        for tier_name, tier_rules in RULE_TIERS:
-            cumulative |= tier_rules
-            count = sum(1 for r in result.rules_per_solved if r.issubset(cumulative))
-            suff_table.add_row(
-                tier_name, str(count), f"{100 * count / result.solved:.1f}%"
-            )
-        console.print()
-        console.print(suff_table)
 
 
 if __name__ == "__main__":
