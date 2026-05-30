@@ -1,6 +1,35 @@
 # CHANGELOG
 
 
+## v0.5.0 (2026-05-30)
+
+### Chores
+
+- Add environment handling for API token authentication
+  ([#19](https://github.com/mariestolk/sudoku-solver/pull/19),
+  [`86ba0b1`](https://github.com/mariestolk/sudoku-solver/commit/86ba0b17c3b07b50f9a1906a94e63e65b7a6a902))
+
+### Features
+
+- Add tui to improve the cli and update sudoku grid
+  ([#22](https://github.com/mariestolk/sudoku-solver/pull/22),
+  [`c30658d`](https://github.com/mariestolk/sudoku-solver/commit/c30658de21fc238a69f526799de538e6fd1d2bf1))
+
+### Refactoring
+
+- Improve efficiency of solver strategies and data structures
+  ([#18](https://github.com/mariestolk/sudoku-solver/pull/18),
+  [`cb3f085`](https://github.com/mariestolk/sudoku-solver/commit/cb3f0857454c46ea3633913ee2c904c3920344fe))
+
+- Remove unused candidate formatting functions from renderer
+  ([#21](https://github.com/mariestolk/sudoku-solver/pull/21),
+  [`426e86b`](https://github.com/mariestolk/sudoku-solver/commit/426e86bf9cc4bf4f24e42bfa947595627c8f265e))
+
+- Remove unused set_value method from Puzzle class
+  ([#20](https://github.com/mariestolk/sudoku-solver/pull/20),
+  [`2657eb2`](https://github.com/mariestolk/sudoku-solver/commit/2657eb2ba66bebb64c6b8a5d99ebe679a6edcee6))
+
+
 ## v0.4.1 (2026-05-29)
 
 ### Bug Fixes
