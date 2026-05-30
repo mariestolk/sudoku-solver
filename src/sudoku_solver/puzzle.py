@@ -143,14 +143,6 @@ class Puzzle:
 
         return True
 
-    def set_value(self, row: int, column: int, value: int) -> None:
-        """Set the value of a cell and propagate constraints."""
-        cell = self.rows[row][column]
-        if cell.value is None and value in cell.candidates:
-            self._naked_singles.discard(cell)
-            cell.set_value(value)
-            self.reduce_candidates()
-
     def reduce_candidates(self) -> None:
         """Run all reduction strategies, tracking which rule resolves each cell."""
         rules: list[tuple[str, Callable[[], None]]] = [
