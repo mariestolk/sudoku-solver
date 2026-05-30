@@ -26,37 +26,6 @@ class PuzzleData(NamedTuple):
     groups: list[list[int]]
     solution: list[list[int]] | None = None
 
-    def validate_solution(self) -> bool:
-        """Return True if the stored solution satisfies all sudoku constraints."""
-        if self.solution is None:
-            return False
-
-        expected = set(range(1, 10))
-
-        for row in self.solution:
-            if set(row) != expected:
-                return False
-
-        for c in range(9):
-            if {self.solution[r][c] for r in range(9)} != expected:
-                return False
-
-        group_values: dict[int, set[int]] = {}
-        for r in range(9):
-            for c in range(9):
-                g = self.groups[r][c]
-                group_values.setdefault(g, set()).add(self.solution[r][c])
-        for values in group_values.values():
-            if values != expected:
-                return False
-
-        for r in range(9):
-            for c in range(9):
-                if self.values[r][c] != 0 and self.values[r][c] != self.solution[r][c]:
-                    return False
-
-        return True
-
 
 class SolveResult(NamedTuple):
     """The outcome of a single solve step."""
@@ -124,24 +93,6 @@ class Puzzle:
             {cell.value for cell in unit} == expected
             for unit in (*self.rows, *self.columns, *self.groups)
         )
-
-    def is_valid_assignment(self, row: int, column: int, value: int) -> bool:
-        """Return True if placing value at (row, column) violates no constraints."""
-        target_cell = self.rows[row][column]
-
-        for cell in self.rows[row]:
-            if cell is not target_cell and cell.value == value:
-                return False
-
-        for cell in self.columns[column]:
-            if cell is not target_cell and cell.value == value:
-                return False
-
-        for cell in self.groups[target_cell.group]:
-            if cell is not target_cell and cell.value == value:
-                return False
-
-        return True
 
     def reduce_candidates(self) -> None:
         """Run all reduction strategies, tracking which rule resolves each cell."""
