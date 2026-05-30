@@ -66,13 +66,41 @@ Expected runtime is roughly **11ms per puzzle**.
 
 The evaluator and the interactive solver's random-puzzle option both require the [9 Million Sudoku Puzzles](https://www.kaggle.com/datasets/rohanrao/sudoku) dataset.
 
-Set your Kaggle API token (from [kaggle.com/settings](https://www.kaggle.com/settings)) as an environment variable:
+### Authentication
+
+Get your API token from [kaggle.com/settings](https://www.kaggle.com/settings) → API → "Create New Token". Then authenticate using one of the methods below.
+
+**OAuth (recommended — works on all platforms):**
+
+```bash
+uv run kaggle auth login
+```
+
+This opens a browser, saves a token locally, and requires no further setup.
+
+**`.env` file (Windows / cross-platform):**
+
+Create a `.env` file in the project root:
+
+```
+KAGGLE_API_TOKEN=your_token_here
+```
+
+Then load it into your current shell session before running any `uv run` commands:
+
+```powershell
+. .\load_env.ps1
+```
+
+The leading `. ` (dot space) is important. Without it, the variables are only set inside the script and are gone by the time it finishes.
+
+**Environment variable (bash / Linux / macOS):**
 
 ```bash
 export KAGGLE_API_TOKEN=your_token_here
 ```
 
-Then download the dataset:
+### Downloading
 
 ```bash
 uv run sudoku-download                             # saves to data/

@@ -18,3 +18,6 @@ stuck.csv
 .cla*
 .ruff*
 *cache
+
+# environment variables
+.env
