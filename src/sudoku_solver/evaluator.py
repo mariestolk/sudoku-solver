@@ -16,7 +16,7 @@ from rich.table import Table
 from sudoku_solver.loader import load_from_csv
 from sudoku_solver.puzzle import Puzzle, PuzzleData
 
-DEFAULT_BATCH_SIZE = 1000
+DEFAULT_BATCH_SIZE = 500
 
 
 @dataclass
