@@ -46,43 +46,9 @@ def format_puzzle(rows: list[list[Cell]]) -> str:
     return "\n".join(lines)
 
 
-def format_candidate(rows: list[list[Cell]], row: int, column: int) -> str:
-    """Return a Rich markup string of the candidates for a specific cell."""
-    cell = rows[row][column]
-    if cell.candidates:
-        return (
-            f"[{color_map[cell.group]}]Candidates for cell ({row}, {column}): "
-            f"{sorted(cell.candidates)}[/]"
-        )
-    return f"[{color_map[cell.group]}]No candidates for cell ({row}, {column})[/]"
-
-
-def format_candidate_group(groups: list[list[Cell]], group: int) -> str:
-    """Return a Rich markup string of the candidates for all cells in a group."""
-    lines = [f"[{color_map[group]}]Candidates for group {group}:[/]"]
-    for cell in groups[group]:
-        if cell.candidates:
-            lines.append(f"Cell ({cell.row}, {cell.column}): {sorted(cell.candidates)}")
-        else:
-            lines.append(f"Cell ({cell.row}, {cell.column}): No candidates")
-    return "\n".join(lines)
-
-
 def format_step(result: SolveResult) -> str:
     """Return a Rich markup string describing a single solve step."""
     return (
         f"[{color_map[result.group]}]Cell ({result.row}, {result.column})"
         f" → {result.value}[/]  \\[{result.rule}]"
     )
-
-
-def format_candidates(rows: list[list[Cell]]) -> str:
-    """Return a Rich markup string of candidates for every cell in the grid."""
-    lines = []
-    for row in rows:
-        for cell in row:
-            if cell.candidates:
-                lines.append(f"[{color_map[cell.group]}]{sorted(cell.candidates)}[/]")
-            else:
-                lines.append("[grey].[/]")
-    return "\n".join(lines)
