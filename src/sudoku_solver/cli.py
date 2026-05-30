@@ -4,13 +4,13 @@ import random
 from pathlib import Path
 
 from rich import print as rprint
-from rich.prompt import Confirm, Prompt
+from rich.prompt import Prompt
 
 from sudoku_solver.loader import load_from_csv
-from sudoku_solver.puzzle import Puzzle, PuzzleData
+from sudoku_solver.puzzle import PuzzleData
 from sudoku_solver.puzzles.chaossudoku_3 import cs_3
 from sudoku_solver.puzzles.chaossudoku_4 import cs_4
-from sudoku_solver.renderer import format_puzzle, format_step
+from sudoku_solver.tui import SudokuApp
 
 CSV_PATH = Path("data") / "sudoku.csv"
 KAGGLE_SAMPLE_SIZE = 1000
@@ -36,37 +36,20 @@ def select_puzzle() -> PuzzleData:
         rprint("  uv run sudoku-download")
         raise SystemExit(1)
 
-    rprint(f"\n[dim]Sampling {KAGGLE_SAMPLE_SIZE} puzzles from dataset...[/]")
     sample = []
     for puzzle in load_from_csv(CSV_PATH):
         sample.append(puzzle)
         if len(sample) >= KAGGLE_SAMPLE_SIZE:
             break
 
-    return random.choice(sample)
+    chosen = random.choice(sample)
+    rprint("\n[dim]Randomly selected a puzzle from the dataset.[/]")
+    return chosen
 
 
 def solve_interactively(puzzle_data: PuzzleData) -> None:
-    """Run the step-by-step solving loop for the given puzzle."""
-    puzzle = Puzzle(puzzle_data.values, puzzle_data.groups)
-    rprint(format_puzzle(puzzle.rows))
-
-    i = 0
-    while not puzzle.is_solved:
-        if not Confirm.ask(f"\n[bold]Step {i + 1}[/bold] — continue?"):
-            break
-
-        result = puzzle.solve_step()
-        if result is not None:
-            rprint(format_step(result))
-        rprint()
-        rprint(format_puzzle(puzzle.rows))
-        i += 1
-
-    if puzzle.is_solved:
-        rprint()
-        rprint("[magenta]Puzzle is solved![/]")
-        rprint()
+    """Launch the Textual TUI for the given puzzle."""
+    SudokuApp(puzzle_data).run()
 
 
 def main() -> None:
