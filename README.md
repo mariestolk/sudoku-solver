@@ -46,11 +46,10 @@ uv run sudoku-evaluate data/sudoku.csv
 uv run sudoku-evaluate data/sudoku.csv --batch-size 5000
 ```
 
-Reports three things:
+Reports two things:
 
 - **Solve rate** — how many puzzles were fully solved
 - **Rule usage** — how often each rule was the deciding factor for an assignment
-- **Rule sufficiency** — what percentage of puzzles are solvable using only rules up to a given complexity tier
 
 To save puzzles the solver could not finish, pass `--output`:
 
@@ -175,7 +174,7 @@ Each empty cell starts with candidates `{1–9}`. After every value is placed, `
 
 ### Known limitations
 
-**Hidden pair is invisible to the rule statistics.** A rule is credited for an assignment only when it reduces a cell to exactly one candidate. Hidden pair always narrows a cell to exactly two candidates — the pair itself — so it can never be the final step that produces a naked single. If hidden pair is a necessary intermediate step, the rule that subsequently reduces one of those two candidates to a single gets the credit instead. This means the evaluator's rule usage and rule sufficiency tables systematically underreport hidden pair's contribution.
+**Hidden pair is invisible to the rule statistics.** A rule is credited for an assignment only when it reduces a cell to exactly one candidate. Hidden pair always narrows a cell to exactly two candidates — the pair itself — so it can never be the final step that produces a naked single. If hidden pair is a necessary intermediate step, the rule that subsequently reduces one of those two candidates to a single gets the credit instead. This means the evaluator's rule usage table systematically underreports hidden pair's contribution.
 
 ## Adding puzzles
 
