@@ -13,6 +13,7 @@ from sudoku_solver.strategies.naked import (
     reduce_naked_triples,
 )
 from sudoku_solver.strategies.pinned import reduce_pinned_candidate
+from sudoku_solver.strategies.swordfish import reduce_swordfish
 from sudoku_solver.strategies.xwing import reduce_xwing
 
 __all__ = [
@@ -25,6 +26,7 @@ __all__ = [
     "reduce_hidden_single",
     "reduce_hidden_pair",
     "reduce_pinned_candidate",
+    "reduce_swordfish",
     "reduce_xwing",
     "reduce_box_line",
 ]

@@ -18,6 +18,7 @@ from sudoku_solver.strategies.naked import (
     reduce_naked_triples,
 )
 from sudoku_solver.strategies.pinned import reduce_pinned_candidate
+from sudoku_solver.strategies.swordfish import reduce_swordfish
 from sudoku_solver.strategies.xwing import reduce_xwing
 
 STANDARD_GROUP_MAP: list[list[int]] = [
@@ -127,6 +128,7 @@ class Puzzle:
                 lambda: reduce_hidden_pair([*self.rows, *self.columns, *self.groups]),
             ),
             ("x-wing", lambda: reduce_xwing(self.rows, self.columns)),
+            ("swordfish", lambda: reduce_swordfish(self.rows, self.columns)),
             (
                 "pinned candidate",
                 lambda: reduce_pinned_candidate(self.groups, self.rows, self.columns),
