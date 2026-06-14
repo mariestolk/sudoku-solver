@@ -39,3 +39,27 @@ def reduce_naked_triples(groups: list[list[Cell]]) -> None:
                 for cell in unsolved:
                     if cell not in triple_cells:
                         cell.candidates -= union
+
+
+def reduce_naked_quads(groups: list[list[Cell]]) -> None:
+    """Reduce candidates by identifying naked quads in each group.
+
+    A naked quad is any four unsolved cells whose candidates collectively
+    cover at most four values. Those values are removed from all other cells
+    in the unit.
+    """
+    for group in groups:
+        unsolved = [cell for cell in group if cell.value is None]
+        eligible = [cell for cell in unsolved if len(cell.candidates) <= 4]
+        for quad in combinations(eligible, 4):
+            union = (
+                quad[0].candidates
+                | quad[1].candidates
+                | quad[2].candidates
+                | quad[3].candidates
+            )
+            if len(union) <= 4:
+                quad_cells = set(quad)
+                for cell in unsolved:
+                    if cell not in quad_cells:
+                        cell.candidates -= union
