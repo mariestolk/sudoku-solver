@@ -1,6 +1,6 @@
 [project]
 name = "sudoku-solver"
-version = "0.5.1"
+version = "0.6.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11.5"
@@ -14,6 +14,7 @@ dependencies = [
 sudoku-solver = "sudoku_solver.cli:main"
 sudoku-evaluate = "sudoku_solver.evaluator:main"
 sudoku-download = "sudoku_solver.downloader:main"
+
 
 
 

@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.6.0 (2026-06-14)
+
+### Features
+
+- Implement naked quads rule ([#26](https://github.com/mariestolk/sudoku-solver/pull/26),
+  [`d5bc8fe`](https://github.com/mariestolk/sudoku-solver/commit/d5bc8fea80b4444b37c555b1a2c1cbd899122c09))
+
+
 ## v0.5.1 (2026-06-14)
 
 ### Bug Fixes
