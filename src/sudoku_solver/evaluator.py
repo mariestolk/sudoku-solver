@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 from collections import Counter
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass, field
@@ -28,6 +29,7 @@ class BatchResult:
     solved: int = 0
     rule_counts: Counter[str] = field(default_factory=Counter)
     stuck: list[tuple[PuzzleData, list[list[int | None]]]] = field(default_factory=list)
+    first_stuck_index: int | None = None
 
 
 def _solve_puzzle(
@@ -66,6 +68,8 @@ def evaluate_batch(
             if solved:
                 result.solved += 1
             else:
+                if result.first_stuck_index is None:
+                    result.first_stuck_index = i
                 result.stuck.append((pd, partial))
             progress.advance(task)
     return result
@@ -73,6 +77,19 @@ def evaluate_batch(
 
 def _grid_to_str(grid: Sequence[Sequence[int | None]]) -> str:
     return "".join(str(v) if v is not None else "0" for row in grid for v in row)
+
+
+def _save_first_stuck(pd: PuzzleData, index: int, directory: Path) -> Path:
+    """Save a single stuck puzzle as unsolved_puzzle_{index}.json."""
+    data: dict[str, str | int] = {
+        "index": index,
+        "puzzle": _grid_to_str(pd.values),
+    }
+    if pd.solution is not None:
+        data["solution"] = _grid_to_str(pd.solution)
+    path = directory / f"unsolved_puzzle_{index}.json"
+    path.write_text(json.dumps(data, indent=2))
+    return path
 
 
 def _write_stuck(
@@ -114,6 +131,14 @@ def main() -> None:
     parser.add_argument(
         "--output", type=Path, metavar="FILE", help="Save stuck puzzles to this CSV"
     )
+    parser.add_argument(
+        "--save-first-stuck",
+        action="store_true",
+        help=(
+            "Save the first unsolvable puzzle to the data folder as "
+            "unsolved_puzzle_<N>.json"
+        ),
+    )
     args = parser.parse_args()
 
     console = Console()
@@ -124,6 +149,11 @@ def main() -> None:
         )
         raise SystemExit(1)
     result = evaluate_batch(load_from_csv(args.csv), args.batch_size, console)
+
+    if args.save_first_stuck and result.stuck and result.first_stuck_index is not None:
+        pd, _ = result.stuck[0]
+        saved = _save_first_stuck(pd, result.first_stuck_index, args.csv.parent)
+        console.print(f"Saved first stuck puzzle to [cyan]{saved}[/cyan]")
 
     if args.output and result.stuck:
         _write_stuck(result.stuck, args.output)

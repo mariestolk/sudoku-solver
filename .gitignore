@@ -9,9 +9,10 @@ wheels/
 # Virtual environments
 .venv
 
-# CSVs
+# data
 sudoku.csv
 stuck.csv
+*.json
 
 # Redundant md files
 *DE.md

@@ -16,7 +16,15 @@ def make_group(candidate_sets: list[list[int]], group_index: int = 0) -> list[Ce
 
 def test_naked_quad_removes_candidates_from_peers() -> None:
     """Ensure naked quad values are removed from all other cells in the group."""
-    group = make_group([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 4, 5]])
+    group = make_group(
+        [
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 4, 5],
+        ]
+    )
     reduce_naked_quads([group])
     assert 1 not in group[4].candidates
     assert 2 not in group[4].candidates
@@ -25,7 +33,15 @@ def test_naked_quad_removes_candidates_from_peers() -> None:
 
 def test_naked_quad_cells_keep_their_candidates() -> None:
     """Ensure the four cells forming the quad keep their candidates."""
-    group = make_group([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 4, 5]])
+    group = make_group(
+        [
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 4, 5],
+        ]
+    )
     reduce_naked_quads([group])
     assert group[0].candidates == {1, 2, 3, 4}
     assert group[1].candidates == {1, 2, 3, 4}
@@ -35,7 +51,15 @@ def test_naked_quad_cells_keep_their_candidates() -> None:
 
 def test_other_candidates_in_peer_left_intact() -> None:
     """Ensure only the quad values are removed from peers, not all candidates."""
-    group = make_group([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 4, 5]])
+    group = make_group(
+        [
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 3, 4],
+            [1, 2, 4, 5],
+        ]
+    )
     reduce_naked_quads([group])
     assert group[4].candidates == {5}
 
@@ -48,8 +72,10 @@ def test_mixed_naked_quad_removes_candidates_from_peers() -> None:
 
 
 def test_no_removal_when_only_three_matching_cells() -> None:
-    """Ensure nothing is removed when fewer than four cells share the same candidates."""
-    group = make_group([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4, 5]])
+    """Ensure nothing is removed when fewer than four cells share same candidates."""
+    group = make_group(
+        [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4, 5]]
+    )
     before = [set(cell.candidates) for cell in group]
     reduce_naked_quads([group])
     for cell, original in zip(group, before):
