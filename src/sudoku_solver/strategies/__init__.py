@@ -6,6 +6,7 @@ from sudoku_solver.strategies.elimination import (
     reduce_rows,
 )
 from sudoku_solver.strategies.hidden import reduce_hidden_pair, reduce_hidden_single
+from sudoku_solver.strategies.intersection import reduce_box_line
 from sudoku_solver.strategies.naked import (
     reduce_naked_pairs,
     reduce_naked_quads,
@@ -25,4 +26,5 @@ __all__ = [
     "reduce_hidden_pair",
     "reduce_pinned_candidate",
     "reduce_xwing",
+    "reduce_box_line",
 ]

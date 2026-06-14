@@ -11,6 +11,7 @@ from sudoku_solver.strategies.elimination import (
     reduce_rows,
 )
 from sudoku_solver.strategies.hidden import reduce_hidden_pair, reduce_hidden_single
+from sudoku_solver.strategies.intersection import reduce_box_line
 from sudoku_solver.strategies.naked import (
     reduce_naked_pairs,
     reduce_naked_quads,
@@ -129,6 +130,10 @@ class Puzzle:
             (
                 "pinned candidate",
                 lambda: reduce_pinned_candidate(self.groups, self.rows, self.columns),
+            ),
+            (
+                "box/line reduction",
+                lambda: reduce_box_line(self.rows, self.columns, self.groups),
             ),
         ]
         multi: set[Cell] = {
