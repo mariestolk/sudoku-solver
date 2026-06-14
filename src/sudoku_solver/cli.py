@@ -18,7 +18,7 @@ KAGGLE_SAMPLE_SIZE = 1000
 
 
 def _find_unsolved_puzzles() -> list[tuple[int, Path]]:
-    """Return sorted list of (dataset_index, path) for saved unsolved puzzle JSON files."""
+    """Return sorted list of saved unsolved puzzle JSON files."""
     if not DATA_DIR.exists():
         return []
     results = []

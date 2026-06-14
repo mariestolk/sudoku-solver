@@ -14,7 +14,7 @@ def _parse_grid(s: str) -> list[list[int]]:
 
 
 def load_from_json(path: str | Path) -> PuzzleData:
-    """Load a PuzzleData from a JSON file saved by the evaluator's --save-first-stuck flag."""
+    """Load PuzzleData from JSON file saved by evaluator's --save-first-stuck flag."""
     data = json.loads(Path(path).read_text())
     solution = _parse_grid(data["solution"]) if "solution" in data else None
     return PuzzleData(

@@ -134,7 +134,10 @@ def main() -> None:
     parser.add_argument(
         "--save-first-stuck",
         action="store_true",
-        help="Save the first unsolvable puzzle to the data folder as unsolved_puzzle_<N>.json",
+        help=(
+            "Save the first unsolvable puzzle to the data folder as "
+            "unsolved_puzzle_<N>.json"
+        ),
     )
     args = parser.parse_args()
 
