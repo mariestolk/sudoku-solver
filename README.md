@@ -161,9 +161,9 @@ Each empty cell starts with candidates `{1–9}`. After every value is placed, `
 | Rule | Description |
 |---|---|
 | Row / column / group elimination | Remove a placed value from peers in the same row, column, and group |
-| Naked pairs / triples | If N cells in a group share exactly N candidates, remove those from all other cells in the group |
-| Hidden singles | If a candidate appears in only one cell within a row, column, or group, lock that cell to that candidate |
-| Hidden pairs | If a candidate appears in exactly two cells within a group, remove it from all other cells in the group |
+| Naked pairs / triples | If N cells in a unit share exactly N candidates, remove those from all other cells in that unit |
+| Hidden singles | If a candidate appears in only one cell within a unit, lock that cell to that candidate |
+| Hidden pairs | If two candidates each appear in exactly the same two cells of a unit, restrict those cells to only those two candidates |
 | X-wing | If a candidate appears in exactly two cells in each of two rows, and those cells share the same two columns, eliminate the candidate from all other cells in those two columns (and vice versa for columns) |
 | Pinned candidates | If all cells holding a candidate within a group share a row or column, eliminate that candidate from the rest of that row/column |
 
