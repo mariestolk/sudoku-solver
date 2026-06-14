@@ -1,6 +1,21 @@
 # CHANGELOG
 
 
+## v0.5.1 (2026-06-14)
+
+### Bug Fixes
+
+- Update iteration rules for naked pairs, triples, and hidden pairs to support row and column units
+  ([#25](https://github.com/mariestolk/sudoku-solver/pull/25),
+  [`fa0df53`](https://github.com/mariestolk/sudoku-solver/commit/fa0df53537a729b3ef308867efd667fa66a71d76))
+
+### Documentation
+
+- Update evaluator statistics description in README
+  ([#23](https://github.com/mariestolk/sudoku-solver/pull/23),
+  [`0d248cf`](https://github.com/mariestolk/sudoku-solver/commit/0d248cf53846c52ff861735302c467f53d5c5887))
+
+
 ## v0.5.0 (2026-05-30)
 
 ### Chores
