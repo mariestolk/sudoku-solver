@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.8.0 (2026-06-14)
+
+### Features
+
+- Implement box/line reduction strategy and corresponding tests
+  ([#28](https://github.com/mariestolk/sudoku-solver/pull/28),
+  [`c8f68e7`](https://github.com/mariestolk/sudoku-solver/commit/c8f68e70da92923906a5ec5357a99c1170f62688))
+
+
 ## v0.7.0 (2026-06-14)
 
 ### Features
