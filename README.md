@@ -166,6 +166,7 @@ Each empty cell starts with candidates `{1–9}`. After every value is placed, `
 | Hidden pairs | If two candidates each appear in exactly the same two cells of a unit, restrict those cells to only those two candidates |
 | X-wing | If a candidate appears in exactly two cells in each of two rows, and those cells share the same two columns, eliminate the candidate from all other cells in those two columns (and vice versa for columns) |
 | Pinned candidates | If all cells holding a candidate within a group share a row or column, eliminate that candidate from the rest of that row/column |
+| Box/line reduction | If all cells holding a candidate within a row or column belong to the same group, eliminate that candidate from the rest of that group |
 
 `solve_step()` picks a random cell that has been reduced to a single candidate, places the value, and triggers another round of reduction. Each placed value records the rule that narrowed it to one candidate (`Cell.deciding_rule`). The process repeats until the puzzle is solved or no more naked singles remain.
 
