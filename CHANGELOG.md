@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.7.0 (2026-06-14)
+
+### Features
+
+- Add functionality to load unsolved puzzles from JSON and save first stuck puzzle
+  ([#27](https://github.com/mariestolk/sudoku-solver/pull/27),
+  [`c2eebb8`](https://github.com/mariestolk/sudoku-solver/commit/c2eebb8fb853ed0c7ec43fc0b4ee17d5f8f7e598))
+
+
 ## v0.6.0 (2026-06-14)
 
 ### Features
