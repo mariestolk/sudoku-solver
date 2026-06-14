@@ -13,6 +13,7 @@ from sudoku_solver.strategies.elimination import (
 from sudoku_solver.strategies.hidden import reduce_hidden_pair, reduce_hidden_single
 from sudoku_solver.strategies.naked import reduce_naked_pairs, reduce_naked_triples
 from sudoku_solver.strategies.pinned import reduce_pinned_candidate
+from sudoku_solver.strategies.xwing import reduce_xwing
 
 STANDARD_GROUP_MAP: list[list[int]] = [
     [(r // 3) * 3 + (c // 3) for c in range(9)] for r in range(9)
@@ -116,6 +117,7 @@ class Puzzle:
                 "hidden pair",
                 lambda: reduce_hidden_pair([*self.rows, *self.columns, *self.groups]),
             ),
+            ("x-wing", lambda: reduce_xwing(self.rows, self.columns)),
             (
                 "pinned candidate",
                 lambda: reduce_pinned_candidate(self.groups, self.rows, self.columns),

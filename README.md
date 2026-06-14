@@ -46,11 +46,10 @@ uv run sudoku-evaluate data/sudoku.csv
 uv run sudoku-evaluate data/sudoku.csv --batch-size 5000
 ```
 
-Reports three things:
+Reports two things:
 
 - **Solve rate** — how many puzzles were fully solved
 - **Rule usage** — how often each rule was the deciding factor for an assignment
-- **Rule sufficiency** — what percentage of puzzles are solvable using only rules up to a given complexity tier
 
 To save puzzles the solver could not finish, pass `--output`:
 
@@ -165,6 +164,7 @@ Each empty cell starts with candidates `{1–9}`. After every value is placed, `
 | Naked pairs / triples | If N cells in a unit share exactly N candidates, remove those from all other cells in that unit |
 | Hidden singles | If a candidate appears in only one cell within a unit, lock that cell to that candidate |
 | Hidden pairs | If two candidates each appear in exactly the same two cells of a unit, restrict those cells to only those two candidates |
+| X-wing | If a candidate appears in exactly two cells in each of two rows, and those cells share the same two columns, eliminate the candidate from all other cells in those two columns (and vice versa for columns) |
 | Pinned candidates | If all cells holding a candidate within a group share a row or column, eliminate that candidate from the rest of that row/column |
 
 `solve_step()` picks a random cell that has been reduced to a single candidate, places the value, and triggers another round of reduction. Each placed value records the rule that narrowed it to one candidate (`Cell.deciding_rule`). The process repeats until the puzzle is solved or no more naked singles remain.
@@ -175,7 +175,7 @@ Each empty cell starts with candidates `{1–9}`. After every value is placed, `
 
 ### Known limitations
 
-**Hidden pair is invisible to the rule statistics.** A rule is credited for an assignment only when it reduces a cell to exactly one candidate. Hidden pair always narrows a cell to exactly two candidates — the pair itself — so it can never be the final step that produces a naked single. If hidden pair is a necessary intermediate step, the rule that subsequently reduces one of those two candidates to a single gets the credit instead. This means the evaluator's rule usage and rule sufficiency tables systematically underreport hidden pair's contribution.
+**Hidden pair is invisible to the rule statistics.** A rule is credited for an assignment only when it reduces a cell to exactly one candidate. Hidden pair always narrows a cell to exactly two candidates — the pair itself — so it can never be the final step that produces a naked single. If hidden pair is a necessary intermediate step, the rule that subsequently reduces one of those two candidates to a single gets the credit instead. This means the evaluator's rule usage table systematically underreports hidden pair's contribution.
 
 ## Adding puzzles
 
