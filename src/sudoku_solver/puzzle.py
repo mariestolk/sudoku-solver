@@ -100,13 +100,22 @@ class Puzzle:
             ("row elimination", lambda: reduce_rows(self.rows)),
             ("column elimination", lambda: reduce_columns(self.columns)),
             ("group elimination", lambda: reduce_groups(self.groups)),
-            ("naked pair", lambda: reduce_naked_pairs(self.groups)),
-            ("naked triple", lambda: reduce_naked_triples(self.groups)),
+            (
+                "naked pair",
+                lambda: reduce_naked_pairs([*self.rows, *self.columns, *self.groups]),
+            ),
+            (
+                "naked triple",
+                lambda: reduce_naked_triples([*self.rows, *self.columns, *self.groups]),
+            ),
             (
                 "hidden single",
                 lambda: reduce_hidden_single(self.rows, self.columns, self.groups),
             ),
-            ("hidden pair", lambda: reduce_hidden_pair(self.groups)),
+            (
+                "hidden pair",
+                lambda: reduce_hidden_pair([*self.rows, *self.columns, *self.groups]),
+            ),
             (
                 "pinned candidate",
                 lambda: reduce_pinned_candidate(self.groups, self.rows, self.columns),

@@ -79,3 +79,31 @@ def test_does_not_affect_other_groups() -> None:
     assert 1 in group1[0].candidates
     assert 2 in group1[0].candidates
     assert 3 in group1[0].candidates
+
+
+def test_naked_triple_removes_candidates_from_row_peers() -> None:
+    """Ensure naked triple elimination works when the unit is a row."""
+    c0 = create_cell(0, 0, 0)
+    c1 = create_cell(0, 1, 0)
+    c2 = create_cell(0, 2, 0)
+    c3 = create_cell(0, 3, 1)
+    c0.set_candidates([1, 2])
+    c1.set_candidates([2, 3])
+    c2.set_candidates([1, 3])
+    c3.set_candidates([1, 2, 3, 4])
+    reduce_naked_triples([[c0, c1, c2, c3]])
+    assert c3.candidates == {4}
+
+
+def test_naked_triple_removes_candidates_from_column_peers() -> None:
+    """Ensure naked triple elimination works when the unit is a column."""
+    c0 = create_cell(0, 0, 0)
+    c1 = create_cell(1, 0, 0)
+    c2 = create_cell(2, 0, 0)
+    c3 = create_cell(3, 0, 1)
+    c0.set_candidates([1, 2])
+    c1.set_candidates([2, 3])
+    c2.set_candidates([1, 3])
+    c3.set_candidates([1, 2, 3, 4])
+    reduce_naked_triples([[c0, c1, c2, c3]])
+    assert c3.candidates == {4}

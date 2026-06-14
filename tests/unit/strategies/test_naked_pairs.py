@@ -53,3 +53,29 @@ def test_does_not_affect_other_groups() -> None:
     reduce_naked_pairs([group0, group1])
     assert 3 in group1[0].candidates
     assert 7 in group1[0].candidates
+
+
+def test_naked_pair_removes_candidates_from_row_peers() -> None:
+    """Ensure naked pair elimination works when the unit is a row."""
+    c0 = create_cell(0, 0, 0)
+    c1 = create_cell(0, 1, 0)
+    c2 = create_cell(0, 2, 1)
+    c0.set_candidates([3, 7])
+    c1.set_candidates([3, 7])
+    c2.set_candidates([1, 3, 5, 7])
+    reduce_naked_pairs([[c0, c1, c2]])
+    assert 3 not in c2.candidates
+    assert 7 not in c2.candidates
+
+
+def test_naked_pair_removes_candidates_from_column_peers() -> None:
+    """Ensure naked pair elimination works when the unit is a column."""
+    c0 = create_cell(0, 0, 0)
+    c1 = create_cell(1, 0, 0)
+    c2 = create_cell(2, 0, 1)
+    c0.set_candidates([3, 7])
+    c1.set_candidates([3, 7])
+    c2.set_candidates([1, 3, 5, 7])
+    reduce_naked_pairs([[c0, c1, c2]])
+    assert 3 not in c2.candidates
+    assert 7 not in c2.candidates
