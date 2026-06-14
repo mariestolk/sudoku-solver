@@ -17,6 +17,7 @@ from sudoku_solver.loader import load_from_csv
 from sudoku_solver.puzzle import Puzzle, PuzzleData
 
 DEFAULT_BATCH_SIZE = 500
+DEFAULT_CSV_PATH = Path("data") / "sudoku.csv"
 
 
 @dataclass
@@ -95,7 +96,14 @@ def _write_stuck(
 def main() -> None:
     """Run evaluation for a batch of Kaggle sudoku puzzles."""
     parser = argparse.ArgumentParser(description="Evaluate sudoku solver performance.")
-    parser.add_argument("csv", type=Path, metavar="FILE", help="Kaggle-format CSV file")
+    parser.add_argument(
+        "csv",
+        type=Path,
+        metavar="FILE",
+        nargs="?",
+        default=DEFAULT_CSV_PATH,
+        help=f"Kaggle-format CSV file (default: {DEFAULT_CSV_PATH})",
+    )
     parser.add_argument(
         "--batch-size",
         type=int,
@@ -109,6 +117,12 @@ def main() -> None:
     args = parser.parse_args()
 
     console = Console()
+    if not args.csv.exists():
+        console.print(
+            f"[bold red]File not found:[/bold red] [cyan]{args.csv}[/cyan]\n"
+            "Download it with: [bold]uv run sudoku-download[/bold]"
+        )
+        raise SystemExit(1)
     result = evaluate_batch(load_from_csv(args.csv), args.batch_size, console)
 
     if args.output and result.stuck:
