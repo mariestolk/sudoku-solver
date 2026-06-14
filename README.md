@@ -165,6 +165,7 @@ Each empty cell starts with candidates `{1–9}`. After every value is placed, `
 | Naked pairs / triples | If N cells in a group share exactly N candidates, remove those from all other cells in the group |
 | Hidden singles | If a candidate appears in only one cell within a row, column, or group, lock that cell to that candidate |
 | Hidden pairs | If a candidate appears in exactly two cells within a group, remove it from all other cells in the group |
+| X-wing | If a candidate appears in exactly two cells in each of two rows, and those cells share the same two columns, eliminate the candidate from all other cells in those two columns (and vice versa for columns) |
 | Pinned candidates | If all cells holding a candidate within a group share a row or column, eliminate that candidate from the rest of that row/column |
 
 `solve_step()` picks a random cell that has been reduced to a single candidate, places the value, and triggers another round of reduction. Each placed value records the rule that narrowed it to one candidate (`Cell.deciding_rule`). The process repeats until the puzzle is solved or no more naked singles remain.
