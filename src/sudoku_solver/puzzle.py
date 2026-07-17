@@ -10,7 +10,7 @@ from sudoku_solver.strategies.elimination import (
     reduce_groups,
     reduce_rows,
 )
-from sudoku_solver.strategies.hidden import reduce_hidden_pair, reduce_hidden_single
+from sudoku_solver.strategies.hidden import reduce_hidden_subsets
 from sudoku_solver.strategies.intersection import reduce_box_line
 from sudoku_solver.strategies.naked import (
     reduce_naked_pairs,
@@ -29,7 +29,7 @@ class PuzzleData(NamedTuple):
     """A sudoku puzzle defined by its initial values and group layout."""
 
     values: list[list[int]]
-    groups: list[list[int]]
+    groups: list[list[int]] | None = None
     solution: list[list[int]] | None = None
 
 
@@ -119,12 +119,12 @@ class Puzzle:
                 lambda: reduce_naked_quads([*self.rows, *self.columns, *self.groups]),
             ),
             (
-                "hidden single",
-                lambda: reduce_hidden_single(self.rows, self.columns, self.groups),
-            ),
-            (
-                "hidden pair",
-                lambda: reduce_hidden_pair([*self.rows, *self.columns, *self.groups]),
+                "hidden subset",
+                lambda: reduce_hidden_subsets(
+                    self.rows,
+                    self.columns,
+                    self.groups,
+                ),
             ),
             ("x-wing", lambda: reduce_xwing(self.rows, self.columns)),
             (
