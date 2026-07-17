@@ -73,9 +73,7 @@ def test_mixed_naked_quad_removes_candidates_from_peers() -> None:
 
 def test_no_removal_when_only_three_matching_cells() -> None:
     """Ensure nothing is removed when fewer than four cells share same candidates."""
-    group = make_group(
-        [[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4, 5]]
-    )
+    group = make_group([[1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4], [1, 2, 3, 4, 5]])
     before = [set(cell.candidates) for cell in group]
     reduce_naked_quads([group])
     for cell, original in zip(group, before):

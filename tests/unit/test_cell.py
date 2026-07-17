@@ -23,7 +23,7 @@ def test_cell_repr() -> None:
 
 
 def test_set_value() -> None:
-    """Test that set_value correctly sets the cell value and clears candidates and rule."""
+    """Test set_value correctly sets the cell value and clears candidates and rule."""
     cell = create_cell(row=0, column=0, group=0)
     cell.set_deciding_rule("hidden_single")
 

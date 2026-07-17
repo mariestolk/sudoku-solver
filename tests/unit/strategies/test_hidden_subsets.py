@@ -1,7 +1,6 @@
 """Tests for the generalized hidden-subset strategy."""
 
 import pytest
-
 from sudoku_solver.cell import Cell, create_cell
 from sudoku_solver.strategies.hidden import reduce_hidden_subsets
 
@@ -170,9 +169,7 @@ def test_hidden_quadruple_restricts_four_cells() -> None:
 def test_no_change_when_no_hidden_subset_exists() -> None:
     """Ensure the strategy reports no change without a hidden subset."""
     all_candidates = set(range(1, 10))
-    house = make_house(
-        [list(all_candidates) for _ in range(9)]
-    )
+    house = make_house([list(all_candidates) for _ in range(9)])
 
     removed_count = apply_to_house(house)
 
@@ -237,10 +234,7 @@ def test_reductions_are_isolated_to_the_affected_house() -> None:
         [list(range(1, 10)) for _ in range(9)],
         house_type="group",
     )
-    unaffected_before = [
-        cell.candidates.copy()
-        for cell in unaffected_house
-    ]
+    unaffected_before = [cell.candidates.copy() for cell in unaffected_house]
 
     removed_count = reduce_hidden_subsets(
         rows=[affected_house],
