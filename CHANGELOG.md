@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.9.0 (2026-07-17)
+
+### Features
+
+- Generalize hidden subset strategy ([#29](https://github.com/mariestolk/sudoku-solver/pull/29),
+  [`adae41a`](https://github.com/mariestolk/sudoku-solver/commit/adae41a3fac1c811b8774d6cddb866e12ff2015c))
+
+
 ## v0.8.0 (2026-06-14)
 
 ### Features
