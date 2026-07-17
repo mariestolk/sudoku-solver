@@ -4,6 +4,8 @@ This module provides the Cell class and create_cell function for managing
 individual cells in a Sudoku puzzle.
 """
 
+from collections.abc import Iterable
+
 
 class Cell:
     """A cell class that represents a cell in a sudoku."""
@@ -31,9 +33,17 @@ class Cell:
         """Record which reduction rule narrowed this cell to one candidate."""
         self.deciding_rule = rule
 
-    def set_candidates(self, candidates: list[int]) -> None:
-        """Set the candidates for the cell."""
-        self.candidates = set(candidates)
+    def set_candidates(self, candidates: Iterable[int]) -> None:
+        """Replace the candidates for this cell."""
+        if self.value is not None:
+            raise ValueError("A solved cell cannot have candidates.")
+
+        new_candidates = set(candidates)
+
+        if not new_candidates:
+            raise ValueError("An unsolved cell must have at least one candidate.")
+
+        self.candidates = new_candidates
 
 
 def create_cell(row: int, column: int, group: int, value: int | None = None) -> Cell:
