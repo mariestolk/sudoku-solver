@@ -17,16 +17,13 @@ def reduce_hidden_subsets(
     columns: list[list[Cell]],
     groups: list[list[Cell]],
     max_subset_size: int = 4,
-) -> int:
+) -> None:
     """Reduce candidates using hidden subsets.
 
     A hidden subset of size n exists when n candidates occur only within
     the same n cells of a house.
-
-    Return the number of candidates removed.
     """
     houses = [*rows, *columns, *groups]
-    total_removed = 0
 
     for house in houses:
         while True:
@@ -80,9 +77,6 @@ def reduce_hidden_subsets(
                     rule_name = _subset_names[subset_size]
 
                     for cell, new_candidates in restrictions.items():
-                        removed_count = len(cell.candidates) - len(new_candidates)
-                        total_removed += removed_count
-
                         cell.set_candidates(new_candidates)
 
                         if len(new_candidates) == 1:
@@ -96,5 +90,3 @@ def reduce_hidden_subsets(
 
             if not reduction_found:
                 break
-
-    return total_removed

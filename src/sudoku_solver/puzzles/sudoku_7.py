@@ -1,4 +1,4 @@
-"""Chaos Sudoku puzzle #4."""
+"""Sudoku puzzle #7."""
 
 from sudoku_solver.puzzle import PuzzleData
 
@@ -14,6 +14,5 @@ value_map = [
     [0, 5, 0, 0, 0, 0, 0, 0, 0],
 ]
 
-group_map = None
 
-sudoku_7 = PuzzleData(values=value_map, groups=group_map)
+sudoku_7 = PuzzleData(values=value_map)

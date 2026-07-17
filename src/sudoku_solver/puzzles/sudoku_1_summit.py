@@ -14,6 +14,4 @@ value_map = [
     [0, 8, 0, 0, 0, 0, 0, 6, 0],
 ]
 
-group_map = None
-
-sudoku_1_summit = PuzzleData(values=value_map, groups=group_map)
+sudoku_1_summit = PuzzleData(values=value_map)

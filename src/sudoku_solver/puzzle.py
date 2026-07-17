@@ -29,7 +29,7 @@ class PuzzleData(NamedTuple):
     """A sudoku puzzle defined by its initial values and group layout."""
 
     values: list[list[int]]
-    groups: list[list[int]]
+    groups: list[list[int]] | None = None
     solution: list[list[int]] | None = None
 
 
