@@ -19,6 +19,7 @@ from sudoku_solver.strategies.rectangle_elimination import (
 )
 from sudoku_solver.strategies.swordfish import reduce_swordfish
 from sudoku_solver.strategies.xwing import reduce_xwing
+from sudoku_solver.strategies.xy_chain import reduce_xy_chains
 
 STANDARD_GROUP_MAP: list[list[int]] = [
     [(r // 3) * 3 + (c // 3) for c in range(9)] for r in range(9)
@@ -143,6 +144,14 @@ class Puzzle:
             (
                 "box/line reduction",
                 lambda: reduce_box_line(
+                    self.rows,
+                    self.columns,
+                    self.groups,
+                ),
+            ),
+            (
+                "xy-chain",
+                lambda: reduce_xy_chains(
                     self.rows,
                     self.columns,
                     self.groups,

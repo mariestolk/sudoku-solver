@@ -12,16 +12,18 @@ from sudoku_solver.strategies.pinned import reduce_pinned_candidate
 from sudoku_solver.strategies.rectangle_elimination import reduce_rectangle_elimination
 from sudoku_solver.strategies.swordfish import reduce_swordfish
 from sudoku_solver.strategies.xwing import reduce_xwing
+from sudoku_solver.strategies.xy_chain import reduce_xy_chains
 
 __all__ = [
     "reduce_rows",
     "reduce_columns",
     "reduce_groups",
+    "reduce_box_line",
     "reduce_naked_subsets",
     "reduce_hidden_subsets",
     "reduce_pinned_candidate",
     "reduce_rectangle_elimination",
     "reduce_swordfish",
     "reduce_xwing",
-    "reduce_box_line",
+    "reduce_xy_chains",
 ]
