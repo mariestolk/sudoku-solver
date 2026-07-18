@@ -14,6 +14,9 @@ from sudoku_solver.strategies.hidden import reduce_hidden_subsets
 from sudoku_solver.strategies.intersection import reduce_box_line
 from sudoku_solver.strategies.naked import reduce_naked_subsets
 from sudoku_solver.strategies.pinned import reduce_pinned_candidate
+from sudoku_solver.strategies.rectangle_elimination import (
+    reduce_rectangle_elimination,
+)
 from sudoku_solver.strategies.xwing import reduce_xwing
 
 STANDARD_GROUP_MAP: list[list[int]] = [
@@ -125,6 +128,14 @@ class Puzzle:
                     self.groups,
                     self.rows,
                     self.columns,
+                ),
+            ),
+            (
+                "rectangle elimination",
+                lambda: reduce_rectangle_elimination(
+                    self.rows,
+                    self.columns,
+                    self.groups,
                 ),
             ),
             (
