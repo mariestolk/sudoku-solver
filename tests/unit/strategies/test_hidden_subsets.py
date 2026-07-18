@@ -228,10 +228,7 @@ def test_reductions_are_isolated_to_the_affected_house() -> None:
         [list(range(1, 10)) for _ in range(9)],
         house_type="group",
     )
-    unaffected_before = [
-        cell.candidates.copy()
-        for cell in unaffected_house
-    ]
+    unaffected_before = [cell.candidates.copy() for cell in unaffected_house]
 
     reduce_hidden_subsets(
         rows=[affected_house],
@@ -247,4 +244,3 @@ def test_reductions_are_isolated_to_the_affected_house() -> None:
         unaffected_before,
     ):
         assert cell.candidates == original_candidates
-        
