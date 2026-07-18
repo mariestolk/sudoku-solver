@@ -1,6 +1,15 @@
 # CHANGELOG
 
 
+## v0.10.0 (2026-07-18)
+
+### Features
+
+- Implement generalized naked-subset strategy
+  ([#30](https://github.com/mariestolk/sudoku-solver/pull/30),
+  [`dd9d41e`](https://github.com/mariestolk/sudoku-solver/commit/dd9d41ef46638907ba5865680a67ef358d82590f))
+
+
 ## v0.9.0 (2026-07-17)
 
 ### Features
