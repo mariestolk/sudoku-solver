@@ -1,65 +1,89 @@
-"""Naked pair and naked triple strategies."""
+"""Naked-subset candidate reduction strategies."""
 
 from itertools import combinations
 
 from sudoku_solver.cell import Cell
 
-
-def reduce_naked_pairs(groups: list[list[Cell]]) -> None:
-    """Reduce candidates by identifying naked pairs in each group."""
-    for group in groups:
-        two_candidate_cells = [
-            cell for cell in group if cell.value is None and len(cell.candidates) == 2
-        ]
-        candidate_pair_map: dict[tuple[int, ...], list[Cell]] = {}
-        for cell in two_candidate_cells:
-            key = tuple(sorted(cell.candidates))
-            candidate_pair_map.setdefault(key, []).append(cell)
-        for candidate_pair, cells in candidate_pair_map.items():
-            if len(cells) == 2:
-                for other_cell in group:
-                    if other_cell not in cells and other_cell.value is None:
-                        other_cell.candidates.difference_update(candidate_pair)
+_subset_names = {
+    2: "naked_pair",
+    3: "naked_triple",
+    4: "naked_quadruple",
+}
 
 
-def reduce_naked_triples(groups: list[list[Cell]]) -> None:
-    """Reduce candidates by identifying naked triples in each group.
+def reduce_naked_subsets(
+    rows: list[list[Cell]],
+    columns: list[list[Cell]],
+    groups: list[list[Cell]],
+    max_subset_size: int = 4,
+) -> None:
+    """Reduce candidates using naked subsets.
 
-    A naked triple is any three unsolved cells whose candidates collectively
-    cover at most three values. Those values are removed from all other cells
-    in the unit.
+    A naked subset of size n exists when n cells in a house collectively
+    contain exactly n candidates. Those candidates can be removed from all
+    other unsolved cells in the house.
     """
-    for group in groups:
-        unsolved = [cell for cell in group if cell.value is None]
-        eligible = [cell for cell in unsolved if len(cell.candidates) <= 3]
-        for triple in combinations(eligible, 3):
-            union = triple[0].candidates | triple[1].candidates | triple[2].candidates
-            if len(union) <= 3:
-                triple_cells = set(triple)
-                for cell in unsolved:
-                    if cell not in triple_cells:
-                        cell.candidates -= union
+    houses = [*rows, *columns, *groups]
 
+    for house in houses:
+        while True:
+            reduction_found = False
 
-def reduce_naked_quads(groups: list[list[Cell]]) -> None:
-    """Reduce candidates by identifying naked quads in each group.
+            unsolved_cells = [
+                cell for cell in house if cell.value is None and cell.candidates
+            ]
 
-    A naked quad is any four unsolved cells whose candidates collectively
-    cover at most four values. Those values are removed from all other cells
-    in the unit.
-    """
-    for group in groups:
-        unsolved = [cell for cell in group if cell.value is None]
-        eligible = [cell for cell in unsolved if len(cell.candidates) <= 4]
-        for quad in combinations(eligible, 4):
-            union = (
-                quad[0].candidates
-                | quad[1].candidates
-                | quad[2].candidates
-                | quad[3].candidates
+            largest_subset = min(
+                max_subset_size,
+                len(unsolved_cells) - 1,
             )
-            if len(union) <= 4:
-                quad_cells = set(quad)
-                for cell in unsolved:
-                    if cell not in quad_cells:
-                        cell.candidates -= union
+
+            for subset_size in range(2, largest_subset + 1):
+                eligible_cells = [
+                    cell
+                    for cell in unsolved_cells
+                    if 2 <= len(cell.candidates) <= subset_size
+                ]
+
+                for subset_cells_tuple in combinations(
+                    eligible_cells,
+                    subset_size,
+                ):
+                    subset_candidates: set[int] = set()
+
+                    for cell in subset_cells_tuple:
+                        subset_candidates.update(cell.candidates)
+
+                    if len(subset_candidates) != subset_size:
+                        continue
+
+                    subset_cells = set(subset_cells_tuple)
+
+                    restrictions = {
+                        cell: cell.candidates - subset_candidates
+                        for cell in unsolved_cells
+                        if (
+                            cell not in subset_cells
+                            and cell.candidates & subset_candidates
+                        )
+                    }
+
+                    if not restrictions:
+                        continue
+
+                    rule_name = _subset_names[subset_size]
+
+                    for cell, new_candidates in restrictions.items():
+                        cell.set_candidates(new_candidates)
+
+                        if len(new_candidates) == 1:
+                            cell.set_deciding_rule(rule_name)
+
+                    reduction_found = True
+                    break
+
+                if reduction_found:
+                    break
+
+            if not reduction_found:
+                break

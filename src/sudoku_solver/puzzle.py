@@ -12,12 +12,11 @@ from sudoku_solver.strategies.elimination import (
 )
 from sudoku_solver.strategies.hidden import reduce_hidden_subsets
 from sudoku_solver.strategies.intersection import reduce_box_line
-from sudoku_solver.strategies.naked import (
-    reduce_naked_pairs,
-    reduce_naked_quads,
-    reduce_naked_triples,
-)
+from sudoku_solver.strategies.naked import reduce_naked_subsets
 from sudoku_solver.strategies.pinned import reduce_pinned_candidate
+from sudoku_solver.strategies.rectangle_elimination import (
+    reduce_rectangle_elimination,
+)
 from sudoku_solver.strategies.swordfish import reduce_swordfish
 from sudoku_solver.strategies.xwing import reduce_xwing
 
@@ -108,16 +107,12 @@ class Puzzle:
             ("column elimination", lambda: reduce_columns(self.columns)),
             ("group elimination", lambda: reduce_groups(self.groups)),
             (
-                "naked pair",
-                lambda: reduce_naked_pairs([*self.rows, *self.columns, *self.groups]),
-            ),
-            (
-                "naked triple",
-                lambda: reduce_naked_triples([*self.rows, *self.columns, *self.groups]),
-            ),
-            (
-                "naked quad",
-                lambda: reduce_naked_quads([*self.rows, *self.columns, *self.groups]),
+                "naked subset",
+                lambda: reduce_naked_subsets(
+                    self.rows,
+                    self.columns,
+                    self.groups,
+                ),
             ),
             (
                 "hidden subset",
@@ -131,26 +126,48 @@ class Puzzle:
             ("swordfish", lambda: reduce_swordfish(self.rows, self.columns)),
             (
                 "pinned candidate",
-                lambda: reduce_pinned_candidate(self.groups, self.rows, self.columns),
+                lambda: reduce_pinned_candidate(
+                    self.groups,
+                    self.rows,
+                    self.columns,
+                ),
+            ),
+            (
+                "rectangle elimination",
+                lambda: reduce_rectangle_elimination(
+                    self.rows,
+                    self.columns,
+                    self.groups,
+                ),
             ),
             (
                 "box/line reduction",
-                lambda: reduce_box_line(self.rows, self.columns, self.groups),
+                lambda: reduce_box_line(
+                    self.rows,
+                    self.columns,
+                    self.groups,
+                ),
             ),
         ]
+
         multi: set[Cell] = {
             cell
             for row in self.rows
             for cell in row
-            if cell.value is None and len(cell.candidates) != 1
+            if cell.value is None and len(cell.candidates) > 1
         }
+
         for rule_name, rule_fn in rules:
             rule_fn()
+
             resolved = {cell for cell in multi if len(cell.candidates) == 1}
+
             for cell in resolved:
-                cell.set_deciding_rule(rule_name)
-            self._naked_singles |= resolved
-            multi -= resolved
+                if cell.deciding_rule is None:
+                    cell.set_deciding_rule(rule_name)
+
+            self._naked_singles.update(resolved)
+            multi.difference_update(resolved)
 
     def solve_step(self) -> SolveResult | None:
         """Pick a random single-candidate cell, assign it, and return the result."""
