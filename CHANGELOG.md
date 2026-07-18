@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.11.0 (2026-07-18)
+
+### Features
+
+- Rectangle elimination strategy ([#31](https://github.com/mariestolk/sudoku-solver/pull/31),
+  [`4e49df2`](https://github.com/mariestolk/sudoku-solver/commit/4e49df2b935a9128938e35c0c7d0219210667250))
+
+
 ## v0.10.0 (2026-07-18)
 
 ### Features
