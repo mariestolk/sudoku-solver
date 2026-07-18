@@ -1,140 +1,308 @@
-"""Tests for the Swordfish strategy."""
+"""Unit tests for the Swordfish strategy."""
 
-from sudoku_solver.cell import create_cell
+from collections.abc import Iterable
+
+from sudoku_solver.cell import Cell, create_cell
 from sudoku_solver.strategies.swordfish import reduce_swordfish
 
+_GRID_SIZE = 9
+_BASE_CANDIDATES = [1, 2, 3, 4]
 
-def _make_grid(
-    rows: int, cols: int, group_fn: callable = lambda r, c: r
-) -> list[list]:
-    """Create a rows×cols grid of fresh cells."""
-    return [[create_cell(r, c, group_fn(r, c)) for c in range(cols)] for r in range(rows)]
+Position = tuple[int, int]
 
 
-def test_swordfish_row_eliminates_from_columns() -> None:
-    """Row swordfish removes candidate 5 from bystander cells in the three columns."""
-    # 4 columns so the bystander (row 1) can have 5 in all 4 cols → 4 positions →
-    # ineligible for swordfish, making it a true bystander.
-    # Swordfish rows 0, 2, 3:
-    #   row 0: 5 in cols 0, 1             → {0, 1}
-    #   row 2: 5 in cols 1, 2             → {1, 2}
-    #   row 3: 5 in cols 0, 2             → {0, 2}
-    # Union = {0, 1, 2} → valid swordfish → eliminate 5 from row 1 in cols 0, 1, 2.
-    # (Col 3 is outside the swordfish; row 1 keeps 5 there.)
-    grid = _make_grid(4, 4)
-    # Row 0: 5 only in cols 0, 1
-    grid[0][2].candidates.discard(5)
-    grid[0][3].candidates.discard(5)
-    # Row 1 (bystander): 5 in all 4 cols (4 positions → not eligible for swordfish)
-    # Row 2: 5 only in cols 1, 2
-    grid[2][0].candidates.discard(5)
-    grid[2][3].candidates.discard(5)
-    # Row 3: 5 only in cols 0, 2
-    grid[3][1].candidates.discard(5)
-    grid[3][3].candidates.discard(5)
+def _make_grid() -> list[list[Cell]]:
+    """Create a standard 9×9 grid with controlled candidate sets."""
+    grid: list[list[Cell]] = []
 
-    rows = grid
-    columns = [[grid[r][c] for r in range(4)] for c in range(4)]
+    for row_index in range(_GRID_SIZE):
+        row: list[Cell] = []
 
-    reduce_swordfish(rows, columns)
+        for column_index in range(_GRID_SIZE):
+            group_index = (
+                row_index // 3
+            ) * 3 + column_index // 3
 
-    # Bystander row 1 loses 5 in the three swordfish columns
-    assert 5 not in grid[1][0].candidates
-    assert 5 not in grid[1][1].candidates
-    assert 5 not in grid[1][2].candidates
-    # Col 3 is not part of the swordfish; row 1 keeps 5 there
-    assert 5 in grid[1][3].candidates
+            cell = create_cell(
+                row_index,
+                column_index,
+                group_index,
+            )
+            cell.set_candidates(_BASE_CANDIDATES)
+            row.append(cell)
 
-    # Swordfish cells keep their candidate
-    assert 5 in grid[0][0].candidates
-    assert 5 in grid[0][1].candidates
-    assert 5 in grid[2][1].candidates
-    assert 5 in grid[2][2].candidates
-    assert 5 in grid[3][0].candidates
-    assert 5 in grid[3][2].candidates
+        grid.append(row)
+
+    return grid
 
 
-def test_swordfish_row_cells_in_fish_keep_candidate() -> None:
-    """Cells that are part of the swordfish pattern are not modified."""
-    grid = _make_grid(4, 4)
-    grid[0][2].candidates.discard(5)
-    grid[0][3].candidates.discard(5)
-    grid[2][0].candidates.discard(5)
-    grid[2][3].candidates.discard(5)
-    grid[3][1].candidates.discard(5)
-    grid[3][3].candidates.discard(5)
-
-    rows = grid
-    columns = [[grid[r][c] for r in range(4)] for c in range(4)]
-
-    reduce_swordfish(rows, columns)
-
-    for r, c in [(0, 0), (0, 1), (2, 1), (2, 2), (3, 0), (3, 2)]:
-        assert 5 in grid[r][c].candidates, f"Swordfish cell ({r},{c}) lost candidate 5"
+def _build_columns(
+    grid: list[list[Cell]],
+) -> list[list[Cell]]:
+    """Build columns from a row-oriented grid."""
+    return [
+        list(column)
+        for column in zip(*grid)
+    ]
 
 
-def test_swordfish_no_elimination_when_union_exceeds_three() -> None:
-    """No elimination when no three rows cover exactly three columns."""
-    # Rows 0, 2, 3: candidate 5 in positions whose union is 4 — no swordfish.
-    #   row 0: cols 0, 1  → {0, 1}
-    #   row 2: cols 2, 3  → {2, 3}
-    #   row 3: cols 0, 3  → {0, 3}
-    # Union = {0, 1, 2, 3} for every triplet → not a swordfish.
-    grid = _make_grid(4, 4)
-    grid[0][2].candidates.discard(5)
-    grid[0][3].candidates.discard(5)
-    grid[2][0].candidates.discard(5)
-    grid[2][1].candidates.discard(5)
-    grid[3][1].candidates.discard(5)
-    grid[3][2].candidates.discard(5)
-
-    rows = grid
-    columns = [[grid[r][c] for r in range(4)] for c in range(4)]
-
-    reduce_swordfish(rows, columns)
-
-    # Row 1 keeps 5 everywhere — no valid swordfish
-    for c in range(4):
-        assert 5 in grid[1][c].candidates
+def _add_candidate(
+    grid: list[list[Cell]],
+    candidate: int,
+    positions: Iterable[Position],
+) -> None:
+    """Add a candidate to the specified cells."""
+    for row_index, column_index in positions:
+        cell = grid[row_index][column_index]
+        new_candidates = cell.candidates | {candidate}
+        cell.set_candidates(sorted(new_candidates))
 
 
-def test_swordfish_column_eliminates_from_rows() -> None:
-    """Column swordfish removes candidate 7 from bystander cells in the three rows."""
-    # 4 rows so the bystander (col 1) can have 7 in all 4 rows → 4 positions →
-    # ineligible, making it a true bystander.
-    # Swordfish cols 0, 2, 3:
-    #   col 0: 7 in rows 0, 1  → {0, 1}
-    #   col 2: 7 in rows 1, 2  → {1, 2}
-    #   col 3: 7 in rows 0, 2  → {0, 2}
-    # Union = {0, 1, 2} → eliminate 7 from col 1 in rows 0, 1, 2.
-    grid = _make_grid(4, 4)
-    # Col 0: 7 only in rows 0, 1
-    grid[2][0].candidates.discard(7)
-    grid[3][0].candidates.discard(7)
-    # Col 1 (bystander): 7 in all 4 rows
-    # Col 2: 7 only in rows 1, 2
-    grid[0][2].candidates.discard(7)
-    grid[3][2].candidates.discard(7)
-    # Col 3: 7 only in rows 0, 2
-    grid[1][3].candidates.discard(7)
-    grid[3][3].candidates.discard(7)
+def test_row_swordfish_eliminates_from_cover_columns() -> None:
+    """Ensure a row-based Swordfish eliminates from its three columns."""
+    grid = _make_grid()
 
-    rows = grid
-    columns = [[grid[r][c] for r in range(4)] for c in range(4)]
+    fish_positions = {
+        (0, 1),
+        (0, 4),
+        (3, 4),
+        (3, 7),
+        (6, 1),
+        (6, 7),
+    }
+    bystander_positions = {
+        (8, 1),
+        (8, 4),
+        (8, 7),
+        (8, 8),
+    }
 
-    reduce_swordfish(rows, columns)
+    _add_candidate(
+        grid,
+        candidate=5,
+        positions=fish_positions | bystander_positions,
+    )
 
-    # Bystander col 1 loses 7 in the three swordfish rows
-    assert 7 not in grid[0][1].candidates
-    assert 7 not in grid[1][1].candidates
-    assert 7 not in grid[2][1].candidates
-    # Row 3 is not part of the swordfish; col 1 keeps 7 there
-    assert 7 in grid[3][1].candidates
+    reduce_swordfish(
+        rows=grid,
+        columns=_build_columns(grid),
+    )
 
-    # Swordfish cells keep their candidate
-    assert 7 in grid[0][0].candidates
-    assert 7 in grid[1][0].candidates
-    assert 7 in grid[1][2].candidates
-    assert 7 in grid[2][2].candidates
-    assert 7 in grid[0][3].candidates
-    assert 7 in grid[2][3].candidates
+    assert 5 not in grid[8][1].candidates
+    assert 5 not in grid[8][4].candidates
+    assert 5 not in grid[8][7].candidates
+
+    # Column 8 is outside the Swordfish.
+    assert 5 in grid[8][8].candidates
+
+    # The cells forming the Swordfish remain unchanged.
+    for row_index, column_index in fish_positions:
+        assert 5 in grid[row_index][column_index].candidates
+
+
+def test_column_swordfish_eliminates_from_cover_rows() -> None:
+    """Ensure a column-based Swordfish eliminates from its three rows."""
+    grid = _make_grid()
+
+    fish_positions = {
+        (1, 0),
+        (4, 0),
+        (4, 3),
+        (7, 3),
+        (1, 6),
+        (7, 6),
+    }
+    bystander_positions = {
+        (1, 8),
+        (4, 8),
+        (7, 8),
+        (8, 8),
+    }
+
+    _add_candidate(
+        grid,
+        candidate=7,
+        positions=fish_positions | bystander_positions,
+    )
+
+    reduce_swordfish(
+        rows=grid,
+        columns=_build_columns(grid),
+    )
+
+    assert 7 not in grid[1][8].candidates
+    assert 7 not in grid[4][8].candidates
+    assert 7 not in grid[7][8].candidates
+
+    # Row 8 is outside the Swordfish.
+    assert 7 in grid[8][8].candidates
+
+    for row_index, column_index in fish_positions:
+        assert 7 in grid[row_index][column_index].candidates
+
+
+def test_swordfish_supports_three_two_three_distribution() -> None:
+    """Ensure a 3-2-3 candidate distribution forms a Swordfish."""
+    grid = _make_grid()
+
+    fish_positions = {
+        # Three occurrences in row 0.
+        (0, 1),
+        (0, 4),
+        (0, 7),
+        # Two occurrences in row 3.
+        (3, 1),
+        (3, 7),
+        # Three occurrences in row 6.
+        (6, 1),
+        (6, 4),
+        (6, 7),
+    }
+    bystander_positions = {
+        (8, 1),
+        (8, 4),
+        (8, 7),
+        (8, 8),
+    }
+
+    _add_candidate(
+        grid,
+        candidate=6,
+        positions=fish_positions | bystander_positions,
+    )
+
+    reduce_swordfish(
+        rows=grid,
+        columns=_build_columns(grid),
+    )
+
+    assert 6 not in grid[8][1].candidates
+    assert 6 not in grid[8][4].candidates
+    assert 6 not in grid[8][7].candidates
+    assert 6 in grid[8][8].candidates
+
+
+def test_no_elimination_when_positions_cover_four_columns() -> None:
+    """Ensure three rows covering four columns do not form a Swordfish."""
+    grid = _make_grid()
+
+    candidate_positions = {
+        (0, 1),
+        (0, 4),
+        (3, 4),
+        (3, 7),
+        (6, 1),
+        (6, 8),
+        (8, 1),
+        (8, 4),
+        (8, 7),
+        (8, 8),
+    }
+
+    _add_candidate(
+        grid,
+        candidate=5,
+        positions=candidate_positions,
+    )
+
+    before = {
+        position: grid[position[0]][position[1]].candidates.copy()
+        for position in candidate_positions
+    }
+
+    reduce_swordfish(
+        rows=grid,
+        columns=_build_columns(grid),
+    )
+
+    for position, original_candidates in before.items():
+        row_index, column_index = position
+        assert (
+            grid[row_index][column_index].candidates
+            == original_candidates
+        )
+
+
+def test_swordfish_removes_only_the_pattern_candidate() -> None:
+    """Ensure unrelated candidates remain in an affected cell."""
+    grid = _make_grid()
+
+    fish_positions = {
+        (0, 1),
+        (0, 4),
+        (3, 4),
+        (3, 7),
+        (6, 1),
+        (6, 7),
+    }
+    bystander_positions = {
+        (8, 1),
+        (8, 4),
+        (8, 7),
+        (8, 8),
+    }
+
+    _add_candidate(
+        grid,
+        candidate=5,
+        positions=fish_positions | bystander_positions,
+    )
+
+    before = grid[8][1].candidates.copy()
+
+    reduce_swordfish(
+        rows=grid,
+        columns=_build_columns(grid),
+    )
+
+    assert grid[8][1].candidates == before - {5}
+
+
+def test_swordfish_is_idempotent() -> None:
+    """Ensure rerunning the strategy causes no additional changes."""
+    grid = _make_grid()
+
+    fish_positions = {
+        (0, 1),
+        (0, 4),
+        (3, 4),
+        (3, 7),
+        (6, 1),
+        (6, 7),
+    }
+    bystander_positions = {
+        (8, 1),
+        (8, 4),
+        (8, 7),
+        (8, 8),
+    }
+
+    _add_candidate(
+        grid,
+        candidate=5,
+        positions=fish_positions | bystander_positions,
+    )
+
+    columns = _build_columns(grid)
+
+    reduce_swordfish(grid, columns)
+
+    after_first_reduction = [
+        [
+            cell.candidates.copy()
+            for cell in row
+        ]
+        for row in grid
+    ]
+
+    reduce_swordfish(grid, columns)
+
+    after_second_reduction = [
+        [
+            cell.candidates.copy()
+            for cell in row
+        ]
+        for row in grid
+    ]
+
+    assert after_second_reduction == after_first_reduction
