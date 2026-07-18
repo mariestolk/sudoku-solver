@@ -10,6 +10,7 @@ from sudoku_solver.loader import load_from_csv, load_from_json
 from sudoku_solver.puzzle import PuzzleData
 from sudoku_solver.puzzles.chaossudoku_3 import cs_3
 from sudoku_solver.puzzles.chaossudoku_4 import cs_4
+from sudoku_solver.puzzles.sudoku_1_summit import sudoku_1_summit as sud_1_summ
 from sudoku_solver.tui import SudokuApp
 
 CSV_PATH = Path("data") / "sudoku.csv"
@@ -37,21 +38,34 @@ def select_puzzle() -> PuzzleData:
     rprint("\n[bold]Select a puzzle to solve:[/bold]")
     rprint("  [cyan]1[/] Chaos Sudoku #3")
     rprint("  [cyan]2[/] Chaos Sudoku #4")
-    rprint("  [cyan]3[/] Random puzzle from Kaggle dataset")
-    for i, (idx, _) in enumerate(unsolved, start=4):
-        rprint(f"  [cyan]{i}[/] Unsolved puzzle #{idx}")
+    rprint("  [cyan]3[/] Sudoku #1 Summit")
+    rprint("  [cyan]4[/] Random puzzle from Kaggle dataset")
 
-    choices = ["1", "2", "3", *[str(i) for i in range(4, 4 + len(unsolved))]]
+    for menu_index, (puzzle_index, _) in enumerate(unsolved, start=5):
+        rprint(f"  [cyan]{menu_index}[/] Unsolved puzzle #{puzzle_index}")
+
+    choices = [
+        "1",
+        "2",
+        "3",
+        "4",
+        *[str(menu_index) for menu_index in range(5, 5 + len(unsolved))],
+    ]
+
     choice = Prompt.ask("\nEnter choice", choices=choices)
 
     if choice == "1":
         return cs_3
+
     if choice == "2":
         return cs_4
 
-    if choice != "3":
-        idx, path = unsolved[int(choice) - 4]
-        rprint(f"\n[dim]Loading unsolved puzzle #{idx}.[/]")
+    if choice == "3":
+        return sud_1_summ
+
+    if choice != "4":
+        puzzle_index, path = unsolved[int(choice) - 5]
+        rprint(f"\n[dim]Loading unsolved puzzle #{puzzle_index}.[/]")
         return load_from_json(path)
 
     if not CSV_PATH.exists():
@@ -61,8 +75,10 @@ def select_puzzle() -> PuzzleData:
         raise SystemExit(1)
 
     sample = []
+
     for puzzle in load_from_csv(CSV_PATH):
         sample.append(puzzle)
+
         if len(sample) >= KAGGLE_SAMPLE_SIZE:
             break
 

@@ -1,6 +1,23 @@
 # CHANGELOG
 
 
+## v0.9.0 (2026-07-17)
+
+### Features
+
+- Generalize hidden subset strategy ([#29](https://github.com/mariestolk/sudoku-solver/pull/29),
+  [`adae41a`](https://github.com/mariestolk/sudoku-solver/commit/adae41a3fac1c811b8774d6cddb866e12ff2015c))
+
+
+## v0.8.0 (2026-06-14)
+
+### Features
+
+- Implement box/line reduction strategy and corresponding tests
+  ([#28](https://github.com/mariestolk/sudoku-solver/pull/28),
+  [`c8f68e7`](https://github.com/mariestolk/sudoku-solver/commit/c8f68e70da92923906a5ec5357a99c1170f62688))
+
+
 ## v0.7.0 (2026-06-14)
 
 ### Features
