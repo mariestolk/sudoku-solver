@@ -18,6 +18,9 @@ from sudoku_solver.strategies.naked import (
     reduce_naked_triples,
 )
 from sudoku_solver.strategies.pinned import reduce_pinned_candidate
+from sudoku_solver.strategies.rectangle_elimination import (
+    reduce_rectangle_elimination,
+)
 from sudoku_solver.strategies.xwing import reduce_xwing
 
 STANDARD_GROUP_MAP: list[list[int]] = [
@@ -130,6 +133,14 @@ class Puzzle:
             (
                 "pinned candidate",
                 lambda: reduce_pinned_candidate(self.groups, self.rows, self.columns),
+            ),
+            (
+                "rectangle elimination",
+                lambda: reduce_rectangle_elimination(
+                    self.rows,
+                    self.columns,
+                    self.groups,
+                ),
             ),
             (
                 "box/line reduction",
